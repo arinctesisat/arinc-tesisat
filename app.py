@@ -178,14 +178,14 @@ def init_db():
     
     db.execute(f'''CREATE TABLE IF NOT EXISTS settings (
         id {pk_type}, title TEXT, phone TEXT, whatsapp TEXT, about TEXT, address TEXT, email TEXT, 
-        color_primary TEXT DEFAULT "#001d3d", color_secondary TEXT DEFAULT "#ffc300", 
+        color_primary TEXT DEFAULT '#001d3d', color_secondary TEXT DEFAULT '#ffc300', 
         hero_title TEXT, hero_subtitle TEXT, hero_img TEXT, 
         about_img TEXT, about_hero_img TEXT, footer_text TEXT,
-        meta_desc TEXT, meta_keys TEXT,
-        stat1_title TEXT DEFAULT "Yıllık Tecrübe", stat1_value TEXT DEFAULT "21+",
-        stat2_title TEXT DEFAULT "Profesyonel Ekip", stat2_value TEXT DEFAULT "12+",
-        stat3_title TEXT DEFAULT "Mutlu Müşteri", stat3_value TEXT DEFAULT "5000+",
-        stat4_title TEXT DEFAULT "Şehir Dışı Hizmet", stat4_value TEXT DEFAULT "15+",
+        meta_"desc" TEXT, meta_keys TEXT,
+        stat1_title TEXT DEFAULT 'Yıllık Tecrübe', stat1_value TEXT DEFAULT '21+',
+        stat2_title TEXT DEFAULT 'Profesyonel Ekip', stat2_value TEXT DEFAULT '12+',
+        stat3_title TEXT DEFAULT 'Mutlu Müşteri', stat3_value TEXT DEFAULT '5000+',
+        stat4_title TEXT DEFAULT 'Şehir Dışı Hizmet', stat4_value TEXT DEFAULT '15+',
         logo TEXT, popup_img TEXT, popup_link TEXT, popup_active INTEGER DEFAULT 0,
         about_text2 TEXT, vision_text TEXT, mission_text TEXT, values_text TEXT,
         gallery_hero_img TEXT, gallery_hero_text TEXT,
@@ -198,17 +198,17 @@ def init_db():
         about_title TEXT, about_subtitle TEXT,
         gallery_title TEXT, contact_title TEXT, contact_subtitle TEXT,
         instagram TEXT, facebook TEXT, linkedin TEXT,
-        city TEXT, district TEXT, map_embed TEXT, site_url TEXT, business_type TEXT DEFAULT "Plumber",
-        seo_home_title TEXT, seo_home_desc TEXT, seo_home_keys TEXT,
-        seo_about_title TEXT, seo_about_desc TEXT, seo_about_keys TEXT,
-        seo_services_title TEXT, seo_services_desc TEXT, seo_services_keys TEXT,
-        seo_gallery_title TEXT, seo_gallery_desc TEXT, seo_gallery_keys TEXT,
-        seo_contact_title TEXT, seo_contact_desc TEXT, seo_contact_keys TEXT
+        city TEXT, district TEXT, map_embed TEXT, site_url TEXT, business_type TEXT DEFAULT 'Plumber',
+        seo_home_title TEXT, seo_home_"desc" TEXT, seo_home_keys TEXT,
+        seo_about_title TEXT, seo_about_"desc" TEXT, seo_about_keys TEXT,
+        seo_services_title TEXT, seo_services_"desc" TEXT, seo_services_keys TEXT,
+        seo_gallery_title TEXT, seo_gallery_"desc" TEXT, seo_gallery_keys TEXT,
+        seo_contact_title TEXT, seo_contact_"desc" TEXT, seo_contact_keys TEXT
     )''')
     db.execute(f'CREATE TABLE IF NOT EXISTS faq (id {pk_type}, question TEXT, answer TEXT)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS services (id {pk_type}, name TEXT, desc TEXT, icon TEXT, img TEXT, video TEXT)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS gallery (id {pk_type}, img TEXT, title TEXT, desc TEXT)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS videos (id {pk_type}, vid_path TEXT, title TEXT, desc TEXT)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS services (id {pk_type}, name TEXT, "desc" TEXT, icon TEXT, img TEXT, video TEXT)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS gallery (id {pk_type}, img TEXT, title TEXT, "desc" TEXT)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS videos (id {pk_type}, vid_path TEXT, title TEXT, "desc" TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS messages (id {pk_type}, name TEXT, phone TEXT, service TEXT, msg TEXT, is_read INTEGER DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, user TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     db.execute(f'CREATE TABLE IF NOT EXISTS testimonials (id {pk_type}, name TEXT, content TEXT, stars INTEGER)')
@@ -407,7 +407,7 @@ def add_service():
             vn = save_file(f, vn)
     
     db = get_db()
-    db.execute('INSERT INTO services (name, desc, icon, img, video) VALUES (?, ?, ?, ?, ?)', 
+    db.execute('INSERT INTO services (name, "desc", icon, img, video) VALUES (?, ?, ?, ?, ?)', 
                (request.form['n'], request.form['d'], request.form['i'], fn, vn))
     db.commit()
     log_action(f"Hizmet eklendi: {request.form['n']}")
@@ -445,7 +445,7 @@ def update_service():
             db.execute('UPDATE services SET video=? WHERE id=?', (vn, id))
 
             
-    db.execute('UPDATE services SET name=?, desc=?, icon=? WHERE id=?', 
+    db.execute('UPDATE services SET name=?, "desc"=?, icon=? WHERE id=?', 
                (request.form['n'], request.form['d'], request.form['i'], id))
     db.commit()
     log_action(f"Hizmet güncellendi ID: {id}")
@@ -488,7 +488,7 @@ def upload_img():
         fn = secure_filename(f.filename)
         fn = save_file(f, fn)
         db = get_db()
-        db.execute('INSERT INTO gallery (img, title, desc) VALUES (?, ?, ?)', (fn, request.form.get('t', ''), request.form.get('d', '')))
+        db.execute('INSERT INTO gallery (img, title, "desc") VALUES (?, ?, ?)', (fn, request.form.get('t', ''), request.form.get('d', '')))
         db.commit()
     return redirect('/panel')
 
@@ -496,7 +496,7 @@ def upload_img():
 @admin_required
 def update_img_info():
     db = get_db()
-    db.execute('UPDATE gallery SET title=?, desc=? WHERE id=?', (request.form['t'], request.form['d'], request.form['id']))
+    db.execute('UPDATE gallery SET title=?, "desc"=? WHERE id=?', (request.form['t'], request.form['d'], request.form['id']))
     db.commit()
     return redirect('/panel')
 
@@ -520,7 +520,7 @@ def upload_video():
         fn = secure_filename(f.filename)
         fn = save_file(f, fn)
         db = get_db()
-        db.execute('INSERT INTO videos (vid_path, title, desc) VALUES (?, ?, ?)', (fn, request.form['t'], request.form.get('d', '')))
+        db.execute('INSERT INTO videos (vid_path, title, "desc") VALUES (?, ?, ?)', (fn, request.form['t'], request.form.get('d', '')))
         db.commit()
     return redirect('/panel')
 
@@ -528,7 +528,7 @@ def upload_video():
 @admin_required
 def update_video_info():
     db = get_db()
-    db.execute('UPDATE videos SET title=?, desc=? WHERE id=?', (request.form['t'], request.form['d'], request.form['id']))
+    db.execute('UPDATE videos SET title=?, "desc"=? WHERE id=?', (request.form['t'], request.form['d'], request.form['id']))
     db.commit()
     return redirect('/panel')
 
