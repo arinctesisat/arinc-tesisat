@@ -212,8 +212,35 @@ def init_db():
     db.execute('CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, pass TEXT)')
 
     
-    if not db.execute('SELECT * FROM settings WHERE id=1').fetchone():
-        db.execute("INSERT INTO settings (id, title, phone, whatsapp, about, address, email) VALUES (1, 'Silivri Su Kaçağı Tespit', '0536 491 5891', '905364915891', 'Profesyonel hizmet...', 'Silivri', 'iletisim@site.com')")
+    setting_row = db.execute('SELECT * FROM settings WHERE id=1').fetchone()
+    if not setting_row or not setting_row['logo']:
+        if setting_row:
+            db.execute('DELETE FROM settings WHERE id=1')
+            db.execute('DELETE FROM services')
+            db.execute('DELETE FROM videos')
+        try:
+            from seed_data import SETTINGS, SERVICES, VIDEOS
+            
+            # Insert settings
+            cols = ', '.join(SETTINGS.keys())
+            placeholders = ', '.join(['?'] * len(SETTINGS))
+            db.execute(f"INSERT INTO settings ({cols}) VALUES ({placeholders})", tuple(SETTINGS.values()))
+            
+            # Insert services
+            for s in SERVICES:
+                cols = ', '.join([f'"{k}"' if k=='desc' else k for k in s.keys()])
+                placeholders = ', '.join(['?'] * len(s))
+                db.execute(f"INSERT INTO services ({cols}) VALUES ({placeholders})", tuple(s.values()))
+                
+            # Insert videos
+            for v in VIDEOS:
+                cols = ', '.join([f'"{k}"' if k=='desc' else k for k in v.keys()])
+                placeholders = ', '.join(['?'] * len(v))
+                db.execute(f"INSERT INTO videos ({cols}) VALUES ({placeholders})", tuple(v.values()))
+                
+        except Exception as e:
+            print(f"Seed error: {e}")
+            db.execute("INSERT INTO settings (id, title, phone, whatsapp, about, address, email) VALUES (1, 'Silivri Su Kaçağı Tespit', '0536 491 5891', '905364915891', 'Profesyonel hizmet...', 'Silivri', 'iletisim@site.com')")
     
     # Varsayılan FAQ'lar (Eğer boşsa)
     if not db.execute('SELECT * FROM faq').fetchone():
