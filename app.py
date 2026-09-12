@@ -75,10 +75,6 @@ csp = {
 }
 
 
-
-
-
-
 Talisman(app, content_security_policy=csp, force_https=IS_PRODUCTION, strict_transport_security=IS_PRODUCTION) # Localde False, Canlıda True
 
 # Session Güvenliği
@@ -92,7 +88,7 @@ app.config.update(
 def log_action(action):
     try:
         db = get_db()
-        db.execute('INSERT INTO logs (action, "user", ip) VALUES (?, ?, ?)', 
+        db.execute('INSERT INTO logs (action, username, ip) VALUES (?, ?, ?)', 
                    (action, session.get('user', 'admin') if session.get('admin') else 'guest', request.remote_addr))
         db.commit()
     except: pass
@@ -210,10 +206,10 @@ def init_db():
     db.execute(f'CREATE TABLE IF NOT EXISTS gallery (id {pk_type}, img TEXT, title TEXT, "desc" TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS videos (id {pk_type}, vid_path TEXT, title TEXT, "desc" TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS messages (id {pk_type}, name TEXT, phone TEXT, service TEXT, msg TEXT, is_read INTEGER DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, "user" TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, username TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     db.execute(f'CREATE TABLE IF NOT EXISTS testimonials (id {pk_type}, name TEXT, content TEXT, stars INTEGER)')
     db.execute(f'CREATE TABLE IF NOT EXISTS timeline (id {pk_type}, year TEXT, title TEXT, content TEXT)')
-    db.execute('CREATE TABLE IF NOT EXISTS admin ("user" TEXT PRIMARY KEY, pass TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, pass TEXT)')
 
     
     if not db.execute('SELECT * FROM settings WHERE id=1').fetchone():
@@ -229,7 +225,7 @@ def init_db():
         ]
         db.executemany('INSERT INTO faq (question, answer) VALUES (?, ?)', faqs)
     
-    if not db.execute('SELECT * FROM admin WHERE "user"=?', ('admin',)).fetchone():
+    if not db.execute('SELECT * FROM admin WHERE username=?', ('admin',)).fetchone():
         default_pass = os.environ.get('ADMIN_PASSWORD')
         if not default_pass:
             default_pass = secrets.token_urlsafe(12)
@@ -334,11 +330,11 @@ def robots():
 @limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
-        user = get_db().execute('SELECT * FROM admin WHERE "user"=?', (request.form['u'],)).fetchone()
-        if user and check_password_hash(user['pass'], request.form['p']):
+        admin_user = get_db().execute('SELECT * FROM admin WHERE username=?', (request.form['u'],)).fetchone()
+        if admin_user and check_password_hash(admin_user['pass'], request.form['p']):
             session.permanent = True
             session['admin'] = True
-            session['user'] = user['user']
+            session['user'] = admin_user['username']
             log_action("Başarılı giriş yapıldı")
             return redirect('/panel')
         log_action(f"Hatalı giriş denemesi: {request.form['u']}")
@@ -620,7 +616,7 @@ def update_settings():
     new_pass = request.form.get('new_pass')
     if new_pass:
         if validate_password(new_pass):
-            db.execute('UPDATE admin SET pass=? WHERE "user"=?', (generate_password_hash(new_pass), 'admin'))
+            db.execute('UPDATE admin SET pass=? WHERE username=?', (generate_password_hash(new_pass), 'admin'))
             log_action("Admin şifresi güncellendi")
         else:
             flash('Yeni şifre yeterince güçlü değil! (En az 8 karakter, büyük/küçük harf ve rakam içermeli)', 'danger')
@@ -639,7 +635,7 @@ def update_password():
     if pw:
         if validate_password(pw):
             db = get_db()
-            db.execute('UPDATE admin SET pass=? WHERE "user"=?', (generate_password_hash(pw), 'admin'))
+            db.execute('UPDATE admin SET pass=? WHERE username=?', (generate_password_hash(pw), 'admin'))
             db.commit()
             log_action("Admin şifresi güncellendi (Bağımsız rota)")
             flash('Şifre başarıyla güncellendi.', 'success')
