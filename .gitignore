@@ -4,5 +4,4 @@ env/
 .env
 database.db
 kurumsal_vFinal.db
-static/uploads/
 .vscode/
