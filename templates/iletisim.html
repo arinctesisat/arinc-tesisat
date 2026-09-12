@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .contact-luxury-hero {
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        background: #000;
+        position: relative;
+        overflow: hidden;
+    }
+    .contact-luxury-hero .hero-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.35;
+    }
+
+    .contact-info-card-premium {
+        background: white;
+        border-radius: 40px;
+        padding: 40px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.02);
+        height: 100%;
+        transition: 0.4s;
+    }
+    .contact-info-card-premium:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 40px 80px rgba(0,0,0,0.06);
+    }
+
+    .contact-form-premium {
+        background: white;
+        border-radius: 50px;
+        padding: 60px;
+        box-shadow: 0 50px 100px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .form-control-luxury {
+        background: #f8fafc;
+        border: 2px solid transparent;
+        border-radius: 20px;
+        padding: 18px 25px;
+        font-weight: 100;
+        transition: 0.3s;
+    }
+    .form-control-luxury:focus {
+        background: white;
+        border-color: var(--main);
+        box-shadow: 0 10px 20px rgba(0,29,61,0.05);
+        color: var(--main);
+    }
+</style>
+
+{% set hero_img = url_for('static', filename='uploads/' + s.contact_hero_img) if s.contact_hero_img else 'https://images.unsplash.com/photo-1587560699334-bea93391dcef?q=80&w=1920' %}
+<section class="contact-luxury-hero">
+    <div class="hero-bg animate__animated animate__fadeIn" style="background-image: url('{{ hero_img }}');"></div>
+    <div class="container py-5 text-white position-relative z-index-1">
+        <div class="row text-center">
+            <div class="col-12 animate__animated animate__fadeInDown">
+                <span class="badge bg-warning text-dark px-4 py-2 rounded-pill fw-black mb-4 tracking-widest uppercase">İLETİŞİM</span>
+                <h1 class="display-1 fw-black italic tracking-tighter mb-4">{{ s.contact_title or 'Bize Ulaşın' }}</h1>
+                <p class="fs-4 opacity-75 mx-auto leading-relaxed" style="max-width: 700px;">{{ s.contact_hero_text or 'İhtiyacınız olan her an, profesyonel çözümlerimizle yanınızdayız.' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5 mt-neg-5 position-relative z-index-2">
+    <div class="row g-4 mb-5">
+        <div class="col-md-4 animate__animated animate__fadeInLeft">
+            <div class="contact-info-card-premium text-center">
+                <div class="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center text-primary mx-auto mb-4">
+                    <i class="fa fa-phone-alt fa-xl"></i>
+                </div>
+                <h5 class="fw-black italic tracking-tighter uppercase text-sm mb-2">Telefon Üzerinden</h5>
+                <a href="tel:{{ s.phone }}" class="d-block h4 fw-black text-primary text-decoration-none">{{ s.phone }}</a>
+                <p class="small text-muted mb-0">Haftanın 7 günü, 24 saat acil destek.</p>
+            </div>
+        </div>
+        <div class="col-md-4 animate__animated animate__fadeInUp">
+            <div class="contact-info-card-premium text-center">
+                <div class="w-16 h-16 bg-success/5 rounded-2xl flex items-center justify-center text-success mx-auto mb-4">
+                    <i class="fab fa-whatsapp fa-2xl"></i>
+                </div>
+                <h5 class="fw-black italic tracking-tighter uppercase text-sm mb-2">WhatsApp Hattı</h5>
+                <a href="https://wa.me/{{ s.whatsapp }}" class="d-block h4 fw-black text-success text-decoration-none">{{ s.whatsapp }}</a>
+                <p class="small text-muted mb-0">Hızlı randevu ve ücretsiz ön keşif.</p>
+            </div>
+        </div>
+        <div class="col-md-4 animate__animated animate__fadeInRight">
+            <div class="contact-info-card-premium text-center">
+                <div class="w-16 h-16 bg-indigo-500/5 rounded-2xl flex items-center justify-center text-indigo-500 mx-auto mb-4">
+                    <i class="fa fa-map-marker-alt fa-xl"></i>
+                </div>
+                <h5 class="fw-black italic tracking-tighter uppercase text-sm mb-2">Merkez Ofis</h5>
+                <p class="h6 fw-black text-slate-800 mb-2">{{ s.address }}</p>
+                <p class="small text-muted mb-0">İstanbul içi tüm bölgelere servisimiz vardır.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="contact-form-premium animate__animated animate__fadeInUp">
+                <div class="text-center mb-5">
+                    <h2 class="display-4 fw-black italic tracking-tighter mb-3">{{ s.contact_subtitle or 'Servis Talep Formu' }}</h2>
+                    <p class="text-muted italic">Formu doldurun, uzman ekibimiz 15 dakika içinde sizi geri arasın.</p>
+                </div>
+
+                {% with flash_msgs = get_flashed_messages(with_categories=true) %}
+                  {% if flash_msgs %}
+                    {% for category, message in flash_msgs %}
+                      <div class="alert alert-{{ category }} rounded-[25px] p-4 mb-5 fw-bold shadow-lg flex items-center gap-3">
+                        <i class="fa fa-check-circle"></i> {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <form action="/submit_contact" method="post" class="row g-4 font-bold">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="col-md-6">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-400 mb-2 d-block ms-3">ADINIZ SOYADINIZ</label>
+                        <input type="text" name="n" class="form-control-luxury w-100" placeholder="Örn: Ahmet Yılmaz" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-400 mb-2 d-block ms-3">HIZLI İLETİŞİM NO</label>
+                        <input type="text" name="p" class="form-control-luxury w-100" placeholder="05XX XXX XX XX" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-400 mb-2 d-block ms-3">ALMAK İSTEDİĞİNİZ HİZMET</label>
+                        <select name="s" class="form-select form-control-luxury w-100">
+                            {% for srv in services %}
+                            <option>{{ srv.name }}</option>
+                            {% endfor %}
+                            {% if not services %}
+                            <option>Genel Tesisat Sorunu</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-400 mb-2 d-block ms-3">TALEBİNİZİN DETAYI</label>
+                        <textarea name="m" class="form-control-luxury w-100" rows="5" placeholder="Lütfen karşılaştığınız sorunu kısaca anlatın..." required></textarea>
+                    </div>
+                    <div class="col-12 pt-4">
+                        <button type="submit" class="btn btn-primary w-100 py-4 rounded-pill fw-black tracking-widest uppercase shadow-xl hover-scale">TALEBİ GÖNDER & ÇÖZÜMÜ BAŞLAT</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid p-0 mt-neg-5 pb-5">
+    <div class="bg-slate-100 rounded-[50px] overflow-hidden shadow-2xl mx-4" style="height: 450px;">
+        {% if s.map_embed %}
+            {{ s.map_embed | safe }}
+        {% else %}
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192697.7932761314!2d28.87209705!3d41.0055005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1cc1f019a377841!2zxLBzdGFuYnVs!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str" width="100%" height="100%" style="border:0; filter: grayscale(1) contrast(1.2) invert(0.9);" allowfullscreen="" loading="lazy"></iframe>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

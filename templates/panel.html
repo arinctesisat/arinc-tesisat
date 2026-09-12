@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arınç Tesisat| Profesyonel Yönetim Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .active-tab { background: linear-gradient(to right, #4f46e5, #7c3aed); color: white !important; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+        .active-sub-tab { border-bottom: 4px solid #4f46e5; color: #4f46e5 !important; background: rgba(79, 70, 229, 0.05); }
+        .active-page-tab { box-shadow: 0 0 0 3px rgba(255,255,255,0.15) !important; transform: scale(1.03); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-slate-200">
+
+    <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col shadow-2xl transition-all duration-300">
+        <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg text-xs tracking-tighter">ARINÇ</div>
+            <div>
+                <h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ARINÇ TESİSAT</h1>
+                <p class="text-xs text-slate-500">Admin Portal v2026</p>
+            </div>
+        </div>
+
+        <div class="px-6 py-4 border-b border-slate-800">
+            <a href="/" target="_blank" class="flex items-center justify-between group p-3 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-xl border border-indigo-500/20 transition-all">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="external-link" class="text-indigo-400 w-4 h-4"></i>
+                    <span class="text-sm font-bold text-indigo-300">Siteyi Görüntüle</span>
+                </div>
+                <i data-lucide="chevron-right" class="text-indigo-600 group-hover:text-indigo-400 w-4 h-4 transition"></i>
+            </a>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-2 overflow-y-auto scrollbar-thin">
+            <button onclick="showTab('dashboard')" id="btn-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30 active-tab">
+                <i data-lucide="bar-chart-3"></i> <span class="font-medium">Kontrol Paneli</span>
+            </button>
+            <button onclick="showTab('website')" id="btn-website" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="home"></i> <span class="font-medium">Website Yönetimi</span>
+            </button>
+            <button onclick="showTab('services')" id="btn-services" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="zap"></i> <span class="font-medium">Hizmet Yönetimi</span>
+            </button>
+            <button onclick="showTab('gallery')" id="btn-gallery" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="images"></i> <span class="font-medium">Resim Galerisi</span>
+            </button>
+            <button onclick="showTab('videos')" id="btn-videos" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="video"></i> <span class="font-medium">Video Galerisi</span>
+            </button>
+            <button onclick="showTab('messages')" id="btn-messages" class="nav-btn w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="mail"></i> <span class="font-medium">Gelen Mesajlar</span>
+                </div>
+                {% if stats.unread_count > 0 %}
+                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">{{ stats.unread_count }}</span>
+                {% endif %}
+            </button>
+            <button onclick="showTab('testimonials')" id="btn-testimonials" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="message-square"></i> <span class="font-medium">Müşteri Yorumları</span>
+            </button>
+            <button onclick="showTab('faq')" id="btn-faq" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="help-circle"></i> <span class="font-medium">Sıkça Sorulan Sorular</span>
+            </button>
+            <button onclick="showTab('timeline')" id="btn-timeline" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="calendar"></i> <span class="font-medium">Başarı Yolculuğu</span>
+            </button>
+            <button onclick="showTab('security')" id="btn-security" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-slate-300 hover:bg-slate-700/30">
+                <i data-lucide="shield"></i> <span class="font-medium">Güvenlik Günlüğü</span>
+            </button>
+        </nav>
+
+
+        <div class="p-4 border-t border-slate-800">
+            <a href="/logout" class="w-full flex items-center justify-center gap-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 px-4 py-3 rounded-lg transition font-bold">
+                <i data-lucide="log-out"></i> Çıkış Yap
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        
+        <header class="bg-slate-800/50 backdrop-blur-md border-b border-slate-700/50 px-8 py-5 flex justify-between items-center shadow-lg">
+            <h2 id="tab-title" class="text-3xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">📊 Kontrol Paneli</h2>
+            <div class="flex items-center gap-3 px-4 py-2 bg-slate-700/50 rounded-lg border border-slate-600/50">
+                <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white">👤</div>
+                <span class="font-semibold text-white">Yönetici</span>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-auto p-8 space-y-8">
+            {% with flash_msgs = get_flashed_messages(with_categories=true) %}
+              {% if flash_msgs %}
+                {% for category, message in flash_msgs %}
+                  <div class="bg-{{ 'green' if category == 'success' else 'red' }}-500/10 border border-{{ 'green' if category == 'success' else 'red' }}-500/50 text-{{ 'green' if category == 'success' else 'red' }}-400 p-4 rounded-xl flex items-center gap-3 animate-bounce">
+                    <i data-lucide="{{ 'check-circle' if category == 'success' else 'alert-circle' }}"></i>
+                    <span class="font-bold">{{ message }}</span>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <section id="dashboard" class="tab-pane space-y-8 animate__animated animate__fadeIn">
+                <!-- Üst Özet Kartları -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-indigo-600 rounded-[35px] p-8 shadow-[0_20px_50px_rgba(79,70,229,0.3)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="zap" class="w-32 h-32"></i>
+                        </div>
+                        <p class="text-xs font-black text-indigo-200 uppercase tracking-widest mb-1">Hizmet Sayısı</p>
+                        <h3 class="text-5xl font-black text-white italic tracking-tighter">{{ stats.service_count }}</h3>
+                        <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/10 w-fit px-3 py-1 rounded-full">
+                            <i data-lucide="trending-up" class="w-3 h-3"></i> Aktif Yayınlar
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-500 rounded-[35px] p-8 shadow-[0_20px_50px_rgba(16,185,129,0.3)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="mail" class="w-32 h-32"></i>
+                        </div>
+                        <p class="text-xs font-black text-emerald-100 uppercase tracking-widest mb-1">Bekleyen Mesaj</p>
+                        <h3 class="text-5xl font-black text-white italic tracking-tighter">{{ stats.unread_count }}</h3>
+                        <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-100 bg-white/10 w-fit px-3 py-1 rounded-full">
+                            <i data-lucide="clock" class="w-3 h-3"></i> Cevap Bekliyor
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-500 rounded-[35px] p-8 shadow-[0_20px_50px_rgba(245,158,11,0.3)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="message-square" class="w-32 h-32"></i>
+                        </div>
+                        <p class="text-xs font-black text-amber-100 uppercase tracking-widest mb-1">Müşteri Yorumu</p>
+                        <h3 class="text-5xl font-black text-white italic tracking-tighter">{{ stats.testimonial_count }}</h3>
+                        <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-amber-100 bg-white/10 w-fit px-3 py-1 rounded-full">
+                            <i data-lucide="star" class="w-3 h-3"></i> Toplam Referans
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-600 rounded-[35px] p-8 shadow-[0_20px_50px_rgba(219,39,119,0.3)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="image" class="w-32 h-32"></i>
+                        </div>
+                        <p class="text-xs font-black text-pink-100 uppercase tracking-widest mb-1">Galeri Görseli</p>
+                        <h3 class="text-5xl font-black text-white italic tracking-tighter">{{ stats.gallery_count }}</h3>
+                        <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-pink-100 bg-white/10 w-fit px-3 py-1 rounded-full">
+                            <i data-lucide="camera" class="w-3 h-3"></i> Medya Kütüphanesi
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Hızlı İşlemler -->
+                    <div class="bg-slate-900 border-2 border-slate-800 rounded-[40px] p-10 space-y-8">
+                        <div>
+                            <h4 class="text-xl font-black text-white italic tracking-tighter">🚀 Hızlı İşlemler</h4>
+                            <p class="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">En çok kullanılan yönetim araçları</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="showTab('services')" class="p-6 bg-slate-800 hover:bg-indigo-600 rounded-3xl transition-all group text-left">
+                                <i data-lucide="plus-circle" class="w-8 h-8 text-indigo-400 group-hover:text-white mb-3"></i>
+                                <span class="block text-xs font-black text-white uppercase italic">Hizmet Ekle</span>
+                            </button>
+                            <button onclick="showTab('gallery')" class="p-6 bg-slate-800 hover:bg-pink-600 rounded-3xl transition-all group text-left">
+                                <i data-lucide="image-plus" class="w-8 h-8 text-pink-400 group-hover:text-white mb-3"></i>
+                                <span class="block text-xs font-black text-white uppercase italic">Resim Yükle</span>
+                            </button>
+                            <button onclick="showTab('messages')" class="p-6 bg-slate-800 hover:bg-emerald-600 rounded-3xl transition-all group text-left">
+                                <i data-lucide="inbox" class="w-8 h-8 text-emerald-400 group-hover:text-white mb-3"></i>
+                                <span class="block text-xs font-black text-white uppercase italic">Mesajlar</span>
+                                {% if stats.unread_count > 0 %}
+                                <span class="inline-block mt-2 px-2 py-0.5 bg-white text-emerald-600 text-[8px] font-black rounded-full">{{ stats.unread_count }} Yeni</span>
+                                {% endif %}
+                            </button>
+                            <button onclick="showTab('website')" class="p-6 bg-slate-800 hover:bg-amber-600 rounded-3xl transition-all group text-left">
+                                <i data-lucide="settings" class="w-8 h-8 text-amber-400 group-hover:text-white mb-3"></i>
+                                <span class="block text-xs font-black text-white uppercase italic">Ayarlar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Son Gelen Mesajlar -->
+                    <div class="lg:col-span-2 bg-slate-900 border-2 border-slate-800 rounded-[40px] p-10">
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h4 class="text-xl font-black text-white italic tracking-tighter">📥 Son Gelen Talepler</h4>
+                                <p class="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">Müşterilerinizden gelen son 3 mesaj</p>
+                            </div>
+                            <button onclick="showTab('messages')" class="text-indigo-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition">Tümünü Gör</button>
+                        </div>
+
+                        <div class="space-y-4">
+                            {% for m in messages[:3] %}
+                            <div class="p-6 bg-slate-800/50 hover:bg-slate-800 rounded-3xl border border-slate-700/50 flex items-center justify-between group transition-all">
+                                <div class="flex items-center gap-5">
+                                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-black">
+                                        {{ m.name[0]|upper }}
+                                    </div>
+                                    <div>
+                                        <p class="font-black text-white italic">{{ m.name }}</p>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">{{ m.service }} • {{ m.date }}</p>
+                                    </div>
+                                </div>
+                                <button onclick="showTab('messages')" class="w-10 h-10 rounded-xl bg-slate-700 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center text-indigo-400">
+                                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            {% endfor %}
+                            {% if not messages %}
+                            <div class="py-10 text-center opacity-30">
+                                <i data-lucide="mail-search" class="w-12 h-12 mx-auto mb-4"></i>
+                                <p class="text-xs font-bold uppercase tracking-widest">Henüz mesaj alınmadı</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+                <section id="website" class="tab-pane hidden">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl">
+                    <!-- Üst Navigasyon - Alt Sekmeler -->
+                    <div class="bg-slate-900/50 p-1 flex border-b border-slate-700 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                        <button type="button" onclick="showSubTab('sub-general')" id="btn-sub-general" class="sub-nav-btn flex-1 flex items-center justify-center gap-2 py-5 px-6 text-[10px] font-black uppercase tracking-widest transition-all active-sub-tab min-w-[150px]">
+                            <i data-lucide="settings" class="w-4 h-4"></i> Genel Ayarlar
+                        </button>
+                        <button type="button" onclick="showSubTab('sub-home')" id="btn-sub-home" class="sub-nav-btn flex-1 flex items-center justify-center gap-2 py-5 px-6 text-[10px] font-black uppercase tracking-widest transition-all text-slate-500 hover:text-slate-200 min-w-[150px]">
+                            <i data-lucide="home" class="w-4 h-4"></i> Anasayfa
+                        </button>
+                        <button type="button" onclick="showSubTab('sub-pages')" id="btn-sub-pages" class="sub-nav-btn flex-1 flex items-center justify-center gap-2 py-5 px-6 text-[10px] font-black uppercase tracking-widest transition-all text-slate-500 hover:text-slate-200 min-w-[150px]">
+                            <i data-lucide="layers" class="w-4 h-4"></i> Alt Sayfalar
+                        </button>
+                        <button type="button" onclick="showSubTab('sub-seo')" id="btn-sub-seo" class="sub-nav-btn flex-1 flex items-center justify-center gap-2 py-5 px-6 text-[10px] font-black uppercase tracking-widest transition-all text-slate-500 hover:text-slate-200 min-w-[150px]">
+                            <i data-lucide="search" class="w-4 h-4"></i> SEO & Meta
+                        </button>
+                        <button type="button" onclick="showSubTab('sub-footer')" id="btn-sub-footer" class="sub-nav-btn flex-1 flex items-center justify-center gap-2 py-5 px-6 text-[10px] font-black uppercase tracking-widest transition-all text-slate-500 hover:text-slate-200 min-w-[150px]">
+                            <i data-lucide="layout-panel-top" class="w-4 h-4"></i> Görünüm & Güvenlik
+                        </button>
+                    </div>
+
+                    <form action="/update_settings" method="post" enctype="multipart/form-data" class="relative">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="p-8 pb-32">
+                            
+                            <!-- ALT SEKME: GENEL AYARLAR -->
+                            <div id="sub-general" class="sub-pane space-y-8 animate__animated animate__fadeIn">
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div class="bg-slate-900/40 p-8 rounded-3xl border border-slate-700/50 space-y-6">
+                                        <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest flex items-center gap-3">
+                                            <span class="w-8 h-8 bg-indigo-500/10 rounded-lg flex items-center justify-center"><i data-lucide="info" class="w-4 h-4"></i></span>
+                                            Temel İletişim Bilgileri
+                                        </h4>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">SİTE BAŞLIĞI / MARKA</label>
+                                                <input type="text" name="t" value="{{ settings.title }}" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-bold">
+                                            </div>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">TELEFON NUMARASI</label>
+                                                    <input type="text" name="p" value="{{ settings.phone }}" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">WHATSAPP (örn: 905xx..)</label>
+                                                    <input type="text" name="w" value="{{ settings.whatsapp }}" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">E-POSTA ADRESİ</label>
+                                                <input type="email" name="e" value="{{ settings.email }}" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl">
+                                            </div>
+                                            <div>
+                                                <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">FİZİKSEL ADRES</label>
+                                                <input type="text" name="addr" value="{{ settings.address }}" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-8">
+                                        <div class="bg-slate-900/40 p-8 rounded-3xl border border-slate-700/50 space-y-6">
+                                            <h4 class="text-xs font-black text-emerald-400 uppercase tracking-widest flex items-center gap-3">
+                                                <span class="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center"><i data-lucide="palette" class="w-4 h-4"></i></span>
+                                                Görsel Kimlik & Renkler
+                                            </h4>
+                                            <div class="flex items-center gap-6 p-4 bg-slate-800/30 rounded-2xl border border-slate-700/30">
+                                                <div class="w-20 h-20 bg-slate-900 rounded-xl border border-slate-700 flex items-center justify-center overflow-hidden shadow-inner">
+                                                    {% if settings.logo %}
+                                                    <img src="/static/uploads/{{ settings.logo }}" class="max-w-full max-h-full p-2">
+                                                    {% else %}
+                                                    <i data-lucide="image" class="text-slate-700"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">Logoyu Güncelle</label>
+                                                    <input type="file" name="logo_file" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-emerald-500/20 file:text-emerald-400 cursor-pointer">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div class="text-center">
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">Ana Renk</label>
+                                                    <input type="color" name="cp" value="{{ settings.color_primary or '#001d3d' }}" class="w-full h-12 bg-slate-800 border-4 border-slate-700 rounded-2xl cursor-pointer">
+                                                </div>
+                                                <div class="text-center">
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">Vurgu Rengi</label>
+                                                    <input type="color" name="cs" value="{{ settings.color_secondary or '#ffc300' }}" class="w-full h-12 bg-slate-800 border-4 border-slate-700 rounded-2xl cursor-pointer">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-slate-900/40 p-8 rounded-3xl border border-slate-700/50 space-y-6">
+                                            <h4 class="text-xs font-black text-orange-400 uppercase tracking-widest flex items-center gap-3">
+                                                <span class="w-8 h-8 bg-orange-500/10 rounded-lg flex items-center justify-center"><i data-lucide="share-2" class="w-4 h-4"></i></span>
+                                                Sosyal Medya Linkleri
+                                            </h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div class="relative">
+                                                    <i class="fab fa-instagram absolute left-4 top-1/2 -translate-y-1/2 text-pink-500 opacity-50"></i>
+                                                    <input type="text" name="insta" value="{{ settings.instagram or '' }}" placeholder="Instagram" class="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs">
+                                                </div>
+                                                <div class="relative">
+                                                    <i class="fab fa-facebook absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 opacity-50"></i>
+                                                    <input type="text" name="face" value="{{ settings.facebook or '' }}" placeholder="Facebook" class="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ALT SEKME: ANASAYFA -->
+                            <div id="sub-home" class="sub-pane hidden space-y-8 animate__animated animate__fadeIn">
+                                <div class="bg-slate-900/40 p-10 rounded-3xl border border-slate-700/50">
+                                    <div class="flex items-center gap-6 mb-10">
+                                        <div class="w-16 h-16 bg-indigo-500/20 border border-indigo-500/20 rounded-3xl flex items-center justify-center text-indigo-400 shadow-[0_0_30px_rgba(99,102,241,0.1)]">
+                                            <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-2xl font-black text-white italic tracking-tighter">Anasayfa Vitrin Yönetimi</h4>
+                                            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Sitenizin en çok görünen alanlarını buradan yönetin</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                        <!-- Hero Bölümü -->
+                                        <div class="space-y-6">
+                                            <div class="p-8 bg-slate-800/50 rounded-3xl border border-slate-700/50 relative overflow-hidden group">
+                                                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                                    <i data-lucide="zap" class="w-16 h-16 text-yellow-400"></i>
+                                                </div>
+                                                <h5 class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-6">1. Giriş Alanı (Hero Section)</h5>
+                                                <div class="space-y-4">
+                                                    <input type="text" name="hb" value="{{ settings.h_badge or '' }}" placeholder="Üst Rozet Metni" class="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-black text-yellow-500 uppercase tracking-wider">
+                                                    <input type="text" name="ht" value="{{ settings.hero_title or '' }}" placeholder="Ana Manşet Başlık" class="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-xl font-black tracking-tight">
+                                                    <textarea name="hs" rows="3" placeholder="Açıklama Alt Yazısı" class="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-sm leading-relaxed text-slate-400 italic">{{ settings.hero_subtitle or '' }}</textarea>
+                                                    <div class="grid grid-cols-2 gap-4">
+                                                        <input type="text" name="hb1" value="{{ settings.h_btn1 or '' }}" placeholder="Buton 1 (Sol)" class="px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-black uppercase">
+                                                        <input type="text" name="hb2" value="{{ settings.h_btn2 or '' }}" placeholder="Buton 2 (Sağ)" class="px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-black uppercase">
+                                                    </div>
+                                                    <div class="p-6 bg-slate-700/20 rounded-2xl border border-dashed border-slate-600">
+                                                        <label class="text-[10px] font-black text-slate-500 block mb-3 uppercase flex items-center gap-2"><i data-lucide="upload-cloud" class="w-3 h-3"></i> Hero Arkaplan Görseli</label>
+                                                        <input type="file" name="hero_file" class="w-full text-xs text-slate-500">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Diğer Bölümler -->
+                                        <div class="space-y-8">
+                                            <div class="p-8 bg-slate-800/50 rounded-3xl border border-slate-700/50">
+                                                <h5 class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] mb-6">2. Hizmet Başlıkları & Bant</h5>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                                    <input type="text" name="st" value="{{ settings.s_title or '' }}" placeholder="Hizmetler Başlık" class="px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-bold">
+                                                    <input type="text" name="ssub" value="{{ settings.s_subtitle or '' }}" placeholder="Hizmetler Alt Metin" class="px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs">
+                                                </div>
+                                                <div class="space-y-3 bg-indigo-500/5 p-6 rounded-2xl border border-indigo-500/20">
+                                                    <label class="text-[9px] font-black text-indigo-300 uppercase tracking-widest block mb-1">Mavi İletişim Bandı (CTA)</label>
+                                                    <input type="text" name="ctat" value="{{ settings.cta_title or '' }}" placeholder="Bant Başlığı" class="w-full px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-xs font-bold text-indigo-400">
+                                                    <input type="text" name="ctab" value="{{ settings.cta_btn or '' }}" placeholder="Düğme Yazısı" class="w-full px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-xs font-black text-yellow-500">
+                                                </div>
+                                            </div>
+
+                                            <div class="p-8 bg-slate-800/50 rounded-3xl border border-slate-700/50 grid grid-cols-2 gap-6">
+                                                <div>
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">Yorumlar Başlığı</label>
+                                                    <input type="text" name="tt" value="{{ settings.t_title or '' }}" class="w-full px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-bold">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[10px] font-black text-slate-500 block mb-2 uppercase">SSS Başlığı</label>
+                                                    <input type="text" name="ftit" value="{{ settings.f_title or '' }}" class="w-full px-5 py-3 bg-slate-900/50 border border-slate-700 rounded-2xl text-xs font-bold">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ALT SEKME: ALT SAYFALAR -->
+                            <div id="sub-pages" class="sub-pane hidden space-y-6 animate__animated animate__fadeIn">
+
+                                <!-- Sayfa Seçici -->
+                                <div class="flex items-center gap-4 mb-2">
+                                    <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400">
+                                        <i data-lucide="layout-template" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-black text-white italic tracking-tighter">Sayfa İçerik Yöneticisi</h3>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Düzenlemek istediğiniz sayfayı seçin</p>
+                                    </div>
+                                </div>
+
+                                <!-- Sayfa Seçme Kartları -->
+                                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                    <button type="button" onclick="showPageTab('page-about')" id="btn-page-about"
+                                        class="page-tab-btn group p-5 bg-orange-500/10 hover:bg-orange-500/20 border-2 border-orange-500/20 hover:border-orange-500/50 rounded-3xl transition-all text-left active-page-tab">
+                                        <div class="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <i data-lucide="award" class="w-5 h-5 text-orange-400"></i>
+                                        </div>
+                                        <p class="text-xs font-black text-white uppercase tracking-wider">Hakkımızda</p>
+                                        <p class="text-[9px] text-orange-400/70 mt-1">Kurumsal sayfa</p>
+                                    </button>
+                                    <button type="button" onclick="showPageTab('page-services')" id="btn-page-services"
+                                        class="page-tab-btn group p-5 bg-cyan-500/10 hover:bg-cyan-500/20 border-2 border-cyan-500/20 hover:border-cyan-500/50 rounded-3xl transition-all text-left">
+                                        <div class="w-10 h-10 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <i data-lucide="zap" class="w-5 h-5 text-cyan-400"></i>
+                                        </div>
+                                        <p class="text-xs font-black text-white uppercase tracking-wider">Hizmetler</p>
+                                        <p class="text-[9px] text-cyan-400/70 mt-1">Servis vitrin</p>
+                                    </button>
+                                    <button type="button" onclick="showPageTab('page-gallery')" id="btn-page-gallery"
+                                        class="page-tab-btn group p-5 bg-pink-500/10 hover:bg-pink-500/20 border-2 border-pink-500/20 hover:border-pink-500/50 rounded-3xl transition-all text-left">
+                                        <div class="w-10 h-10 bg-pink-500/20 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <i data-lucide="images" class="w-5 h-5 text-pink-400"></i>
+                                        </div>
+                                        <p class="text-xs font-black text-white uppercase tracking-wider">Galeri</p>
+                                        <p class="text-[9px] text-pink-400/70 mt-1">Foto & Video</p>
+                                    </button>
+                                    <button type="button" onclick="showPageTab('page-contact')" id="btn-page-contact"
+                                        class="page-tab-btn group p-5 bg-emerald-500/10 hover:bg-emerald-500/20 border-2 border-emerald-500/20 hover:border-emerald-500/50 rounded-3xl transition-all text-left">
+                                        <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <i data-lucide="phone-call" class="w-5 h-5 text-emerald-400"></i>
+                                        </div>
+                                        <p class="text-xs font-black text-white uppercase tracking-wider">İletişim</p>
+                                        <p class="text-[9px] text-emerald-400/70 mt-1">Kontak formu</p>
+                                    </button>
+                                </div>
+
+                                <!-- ======= HAKKIMIZDA SAYFA EDİTÖRÜ ======= -->
+                                <div id="page-about" class="page-pane space-y-6">
+                                    <div class="flex items-center gap-3 pb-4 border-b border-slate-700/50">
+                                        <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                                        <h4 class="text-base font-black text-orange-400 uppercase tracking-widest">Hakkımızda Sayfası Editörü</h4>
+                                        <a href="/hakkimizda" target="_blank" class="ml-auto text-[10px] text-slate-500 hover:text-orange-400 flex items-center gap-1 transition-colors">
+                                            <i data-lucide="external-link" class="w-3 h-3"></i> Sayfayı Gör
+                                        </a>
+                                    </div>
+
+                                    <!-- Hero Section -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-orange-500/20 overflow-hidden">
+                                        <div class="bg-orange-500/10 px-8 py-4 border-b border-orange-500/20">
+                                            <h5 class="text-[11px] font-black text-orange-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="image" class="w-4 h-4"></i> 1. Hero (Kapak) Bölümü
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            <!-- Mevcut Resim Önizleme -->
+                                            <div class="lg:col-span-1">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-3">KAPAK GÖRSELİ</label>
+                                                <div class="relative group rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 hover:border-orange-500/50 transition-all aspect-video bg-slate-800/50">
+                                                    {% if settings.about_hero_img %}
+                                                    <img src="/static/uploads/{{ settings.about_hero_img }}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                                                        <p class="text-white text-[10px] font-black uppercase">Değiştirmek için seçin</p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-600">
+                                                        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                                                        <p class="text-[10px] font-black uppercase">Resim Yükle</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    <input type="file" name="about_hero_file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                                </div>
+                                            </div>
+                                            <div class="lg:col-span-2 space-y-4">
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">SAYFA BAŞLIĞI</label>
+                                                    <input type="text" name="at" value="{{ settings.about_title or '' }}" placeholder="Hakkımızda ana başlık" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl font-black text-white text-lg focus:border-orange-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">HERO ALT BAŞLIĞI (Slogan)</label>
+                                                    <input type="text" name="asub" value="{{ settings.about_subtitle or '' }}" placeholder="Kısa ve etkili bir slogan..." class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300 focus:border-orange-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">KURUMSAL YAN GÖRSEL</label>
+                                                    <div class="relative flex items-center gap-4 p-4 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 hover:border-orange-500/50 transition-all">
+                                                        {% if settings.about_img %}
+                                                        <img src="/static/uploads/{{ settings.about_img }}" class="w-16 h-16 rounded-xl object-cover border border-slate-700">
+                                                        {% else %}
+                                                        <div class="w-16 h-16 bg-slate-700 rounded-xl flex items-center justify-center"><i data-lucide="image" class="w-5 h-5 text-slate-600"></i></div>
+                                                        {% endif %}
+                                                        <div>
+                                                            <p class="text-[10px] font-black text-slate-400 uppercase">Kurumsal fotoğraf</p>
+                                                            <input type="file" name="about_file" accept="image/*" class="text-[10px] text-slate-600 mt-1">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- İçerik Bölümü -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-slate-700/50 overflow-hidden">
+                                        <div class="bg-slate-800/50 px-8 py-4 border-b border-slate-700/50">
+                                            <h5 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="file-text" class="w-4 h-4"></i> 2. Şirket Hikayesi & İçerik
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 space-y-5">
+                                            <div>
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">PARAGRAF 1 — Şirket Hikayesi</label>
+                                                <textarea name="a" rows="4" placeholder="Şirketinizin kuruluş hikayesi, deneyimi..." class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm leading-relaxed text-slate-300 focus:border-orange-500 transition-all resize-none">{{ settings.about or '' }}</textarea>
+                                            </div>
+                                            <div>
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">PARAGRAF 2 — Misyon & Değerler</label>
+                                                <textarea name="a2" rows="4" placeholder="Müşterilerinize değer teklifiniz, yaklaşımınız..." class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm leading-relaxed text-slate-300 focus:border-orange-500 transition-all resize-none">{{ settings.about_text2 or '' }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vizyon Misyon Değerler -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-slate-700/50 overflow-hidden">
+                                        <div class="bg-slate-800/50 px-8 py-4 border-b border-slate-700/50">
+                                            <h5 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="target" class="w-4 h-4"></i> 3. Vizyon / Misyon / Değerler Kartları
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <div class="p-5 bg-orange-500/5 border border-orange-500/20 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <div class="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center"><i data-lucide="eye" class="w-4 h-4 text-orange-400"></i></div>
+                                                    <span class="text-[10px] font-black text-orange-400 uppercase tracking-widest">Vizyon Kartı</span>
+                                                </div>
+                                                <input type="text" name="vt" value="{{ settings.vision_text or '' }}" placeholder="Vizyonumuz açıklaması..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 focus:border-orange-500 transition-all">
+                                            </div>
+                                            <div class="p-5 bg-blue-500/5 border border-blue-500/20 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center"><i data-lucide="compass" class="w-4 h-4 text-blue-400"></i></div>
+                                                    <span class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Misyon Kartı</span>
+                                                </div>
+                                                <input type="text" name="mt" value="{{ settings.mission_text or '' }}" placeholder="Misyonumuz açıklaması..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 focus:border-blue-500 transition-all">
+                                            </div>
+                                            <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center"><i data-lucide="heart" class="w-4 h-4 text-emerald-400"></i></div>
+                                                    <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Değerler Kartı</span>
+                                                </div>
+                                                <input type="text" name="vlt" value="{{ settings.values_text or '' }}" placeholder="Değerlerimiz açıklaması..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 focus:border-emerald-500 transition-all">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ======= HİZMETLER SAYFA EDİTÖRÜ ======= -->
+                                <div id="page-services" class="page-pane hidden space-y-6">
+                                    <div class="flex items-center gap-3 pb-4 border-b border-slate-700/50">
+                                        <span class="w-3 h-3 bg-cyan-500 rounded-full"></span>
+                                        <h4 class="text-base font-black text-cyan-400 uppercase tracking-widest">Hizmetler Sayfası Editörü</h4>
+                                        <a href="/hizmetler" target="_blank" class="ml-auto text-[10px] text-slate-500 hover:text-cyan-400 flex items-center gap-1 transition-colors">
+                                            <i data-lucide="external-link" class="w-3 h-3"></i> Sayfayı Gör
+                                        </a>
+                                    </div>
+
+                                    <!-- Hero Section -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-cyan-500/20 overflow-hidden">
+                                        <div class="bg-cyan-500/10 px-8 py-4 border-b border-cyan-500/20">
+                                            <h5 class="text-[11px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="image" class="w-4 h-4"></i> 1. Hero (Kapak) Bölümü
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            <div class="lg:col-span-1">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-3">KAPAK GÖRSELİ</label>
+                                                <div class="relative group rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 hover:border-cyan-500/50 transition-all aspect-video bg-slate-800/50">
+                                                    {% if settings.services_hero_img %}
+                                                    <img src="/static/uploads/{{ settings.services_hero_img }}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                                                        <p class="text-white text-[10px] font-black uppercase">Değiştirmek için seçin</p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-600">
+                                                        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                                                        <p class="text-[10px] font-black uppercase">Resim Yükle</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    <input type="file" name="services_hero_file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                                </div>
+                                            </div>
+                                            <div class="lg:col-span-2 space-y-4">
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">SAYFA BAŞLIĞI</label>
+                                                    <input type="text" name="st" value="{{ settings.s_title or '' }}" placeholder="Hizmetlerimiz başlık" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl font-black text-white text-lg focus:border-cyan-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">HERO AÇIKLAMA METNİ</label>
+                                                    <textarea name="sht" rows="3" placeholder="Hizmetler sayfası hero bölümü açıklaması..." class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300 focus:border-cyan-500 transition-all resize-none">{{ settings.services_hero_text or '' }}</textarea>
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">HİZMETLER ALT BAŞLIĞI</label>
+                                                    <input type="text" name="ssub" value="{{ settings.s_subtitle or '' }}" placeholder="Neler sunuyoruz?" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300 focus:border-cyan-500 transition-all">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- CTA Bölümü -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-slate-700/50 overflow-hidden">
+                                        <div class="bg-slate-800/50 px-8 py-4 border-b border-slate-700/50">
+                                            <h5 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="megaphone" class="w-4 h-4"></i> 2. Aksiyon Çağrısı (CTA) Bölümü
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div class="space-y-2">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block">CTA BAŞLIĞI</label>
+                                                <input type="text" name="ctat" value="{{ settings.cta_title or '' }}" placeholder="Şimdi Ara, Hemen Geliyoruz!" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm font-black text-yellow-400 focus:border-yellow-500 transition-all">
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block">CTA ALT METNİ</label>
+                                                <input type="text" name="ctas" value="{{ settings.cta_subtitle or '' }}" placeholder="30 dakikada kapınızdayız." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-xs text-slate-400 focus:border-yellow-500 transition-all">
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block">BUTON METNİ</label>
+                                                <input type="text" name="ctab" value="{{ settings.cta_btn or '' }}" placeholder="ÜCRETSİZ KEŞİF İSTE" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-xs font-black text-white focus:border-yellow-500 transition-all">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Not -->
+                                    <div class="p-5 bg-cyan-500/5 border border-cyan-500/20 rounded-2xl flex items-start gap-4">
+                                        <i data-lucide="info" class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5"></i>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            <strong class="text-cyan-400">Hizmet kartları</strong> için sol menüdeki <strong class="text-white">Hizmet Yönetimi</strong> bölümünü kullanın. Her hizmet için ayrı ayrı resim, başlık ve açıklama düzenleyebilirsiniz.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- ======= GALERİ SAYFA EDİTÖRÜ ======= -->
+                                <div id="page-gallery" class="page-pane hidden space-y-6">
+                                    <div class="flex items-center gap-3 pb-4 border-b border-slate-700/50">
+                                        <span class="w-3 h-3 bg-pink-500 rounded-full"></span>
+                                        <h4 class="text-base font-black text-pink-400 uppercase tracking-widest">Galeri Sayfası Editörü</h4>
+                                        <a href="/galeri" target="_blank" class="ml-auto text-[10px] text-slate-500 hover:text-pink-400 flex items-center gap-1 transition-colors">
+                                            <i data-lucide="external-link" class="w-3 h-3"></i> Sayfayı Gör
+                                        </a>
+                                    </div>
+
+                                    <!-- Hero -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-pink-500/20 overflow-hidden">
+                                        <div class="bg-pink-500/10 px-8 py-4 border-b border-pink-500/20">
+                                            <h5 class="text-[11px] font-black text-pink-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="image" class="w-4 h-4"></i> 1. Hero (Kapak) Bölümü
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            <div class="lg:col-span-1">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-3">KAPAK GÖRSELİ</label>
+                                                <div class="relative group rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 hover:border-pink-500/50 transition-all aspect-video bg-slate-800/50">
+                                                    {% if settings.gallery_hero_img %}
+                                                    <img src="/static/uploads/{{ settings.gallery_hero_img }}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                                                        <p class="text-white text-[10px] font-black uppercase">Değiştirmek için seçin</p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-600">
+                                                        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                                                        <p class="text-[10px] font-black uppercase">Resim Yükle</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    <input type="file" name="gallery_hero_file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                                </div>
+                                            </div>
+                                            <div class="lg:col-span-2 space-y-4">
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">SAYFA BAŞLIĞI</label>
+                                                    <input type="text" name="gt" value="{{ settings.gallery_title or '' }}" placeholder="Çalışma Galerimiz" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl font-black text-white text-lg focus:border-pink-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">HERO AÇIKLAMA METNİ</label>
+                                                    <textarea name="ght" rows="3" placeholder="Galeri sayfası açıklaması..." class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300 focus:border-pink-500 transition-all resize-none">{{ settings.gallery_hero_text or '' }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Galeri Yönetimi -->
+                                    <div class="p-5 bg-pink-500/5 border border-pink-500/20 rounded-2xl flex items-start gap-4">
+                                        <i data-lucide="images" class="w-5 h-5 text-pink-400 flex-shrink-0 mt-0.5"></i>
+                                        <p class="text-xs text-slate-400 leading-relaxed">
+                                            <strong class="text-pink-400">Fotoğraf ve video yüklemek</strong> için sol menüdeki <strong class="text-white">Resim Galerisi</strong> ve <strong class="text-white">Video Galerisi</strong> bölümlerini kullanın. Sınırsız medya yükleyebilirsiniz.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- ======= İLETİŞİM SAYFA EDİTÖRÜ ======= -->
+                                <div id="page-contact" class="page-pane hidden space-y-6">
+                                    <div class="flex items-center gap-3 pb-4 border-b border-slate-700/50">
+                                        <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                                        <h4 class="text-base font-black text-emerald-400 uppercase tracking-widest">İletişim Sayfası Editörü</h4>
+                                        <a href="/iletisim" target="_blank" class="ml-auto text-[10px] text-slate-500 hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                                            <i data-lucide="external-link" class="w-3 h-3"></i> Sayfayı Gör
+                                        </a>
+                                    </div>
+
+                                    <!-- Hero -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-emerald-500/20 overflow-hidden">
+                                        <div class="bg-emerald-500/10 px-8 py-4 border-b border-emerald-500/20">
+                                            <h5 class="text-[11px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="image" class="w-4 h-4"></i> 1. Hero (Kapak) Bölümü
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            <div class="lg:col-span-1">
+                                                <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-3">KAPAK GÖRSELİ</label>
+                                                <div class="relative group rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 hover:border-emerald-500/50 transition-all aspect-video bg-slate-800/50">
+                                                    {% if settings.contact_hero_img %}
+                                                    <img src="/static/uploads/{{ settings.contact_hero_img }}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                                                        <p class="text-white text-[10px] font-black uppercase">Değiştirmek için seçin</p>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-600">
+                                                        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                                                        <p class="text-[10px] font-black uppercase">Resim Yükle</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    <input type="file" name="contact_hero_file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                                </div>
+                                            </div>
+                                            <div class="lg:col-span-2 space-y-4">
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">SAYFA BAŞLIĞI</label>
+                                                    <input type="text" name="ct" value="{{ settings.contact_title or '' }}" placeholder="Bize Ulaşın" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl font-black text-white text-lg focus:border-emerald-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">FORM BAŞLIĞI</label>
+                                                    <input type="text" name="csub" value="{{ settings.contact_subtitle or '' }}" placeholder="Servis Talep Formu" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm font-bold text-emerald-400 focus:border-emerald-500 transition-all">
+                                                </div>
+                                                <div>
+                                                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-2">HERO ALT METNİ</label>
+                                                    <textarea name="cht" rows="2" placeholder="Hero açıklama metni..." class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-slate-300 focus:border-emerald-500 transition-all resize-none">{{ settings.contact_hero_text or '' }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- İletişim Bilgileri -->
+                                    <div class="bg-slate-900/60 rounded-[30px] border border-slate-700/50 overflow-hidden">
+                                        <div class="bg-slate-800/50 px-8 py-4 border-b border-slate-700/50">
+                                            <h5 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="phone" class="w-4 h-4"></i> 2. İletişim Bilgileri Kartları
+                                            </h5>
+                                        </div>
+                                        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+                                            <div class="p-5 bg-blue-500/5 border border-blue-500/20 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <i data-lucide="phone" class="w-4 h-4 text-blue-400"></i>
+                                                    <span class="text-[10px] font-black text-blue-400 uppercase">Telefon</span>
+                                                </div>
+                                                <input type="text" name="p" value="{{ settings.phone or '' }}" placeholder="+90 5xx..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-sm font-black text-white focus:border-blue-500 transition-all">
+                                                <input type="text" name="w" value="{{ settings.whatsapp or '' }}" placeholder="WhatsApp (905xx...)" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-green-400 font-bold focus:border-green-500 transition-all">
+                                            </div>
+                                            <div class="p-5 bg-purple-500/5 border border-purple-500/20 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <i data-lucide="mail" class="w-4 h-4 text-purple-400"></i>
+                                                    <span class="text-[10px] font-black text-purple-400 uppercase">E-Posta & Adres</span>
+                                                </div>
+                                                <input type="email" name="e" value="{{ settings.email or '' }}" placeholder="email@firmaniz.com" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 focus:border-purple-500 transition-all">
+                                                <input type="text" name="addr" value="{{ settings.address or '' }}" placeholder="Tam adres..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-300 focus:border-purple-500 transition-all">
+                                            </div>
+                                            <div class="p-5 bg-slate-800/30 border border-slate-700/50 rounded-2xl space-y-3">
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <i data-lucide="map" class="w-4 h-4 text-slate-400"></i>
+                                                    <span class="text-[10px] font-black text-slate-400 uppercase">Google Maps Embed</span>
+                                                </div>
+                                                <textarea name="map_embed" rows="3" placeholder="Google Maps iframe src URL..." class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-xs text-slate-500 focus:border-slate-500 transition-all resize-none">{{ settings.map_embed or '' }}</textarea>
+                                                <p class="text-[9px] text-slate-600 italic">Google Maps → Paylaş → Haritayı yerleştir → iframe src kısmı</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- ALT SEKME: SEO & META -->
+                            <div id="sub-seo" class="sub-pane hidden space-y-8 animate__animated animate__fadeIn">
+                                <!-- Başlık -->
+                                <div class="flex items-center gap-5 mb-2">
+                                    <div class="w-14 h-14 bg-cyan-500/10 rounded-3xl flex items-center justify-center text-cyan-400">
+                                        <i data-lucide="search" class="w-7 h-7"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-black text-white italic tracking-tighter">SEO & Google Yönetim Merkezi</h3>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Her sayfayı bağımsız optimize edin</p>
+                                    </div>
+                                </div>
+
+                                <!-- Site URL & Yerel SEO -->
+                                <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-[35px] p-8 space-y-6">
+                                    <h4 class="text-xs font-black text-emerald-400 uppercase tracking-widest flex items-center gap-3">
+                                        <span class="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center"><i data-lucide="map-pin" class="w-4 h-4"></i></span>
+                                        Yerel SEO & Site Bilgileri
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div class="space-y-2 lg:col-span-3">
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">SİTE ALAN ADI (örn: https://arinctesisat.com)</label>
+                                            <input type="text" name="site_url" value="{{ settings.site_url or '' }}" placeholder="https://arinctesisat.com" class="w-full px-5 py-4 bg-slate-800/50 border border-emerald-500/30 rounded-2xl text-sm text-emerald-400 font-bold focus:ring-2 focus:ring-emerald-500 transition-all">
+                                            <p class="text-[9px] text-slate-600 italic ml-1">sitemap.xml ve canonical URL için zorunlu. Google Search Console'a da buradan ekleyin.</p>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">İLÇE (örn: Silivri)</label>
+                                            <input type="text" name="district" value="{{ settings.district or '' }}" placeholder="Silivri" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm font-bold">
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">ŞEHİR (örn: İstanbul)</label>
+                                            <input type="text" name="city" value="{{ settings.city or '' }}" placeholder="İstanbul" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm font-bold">
+                                        </div>
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">İŞLETME TİPİ (Schema.org)</label>
+                                            <select name="business_type" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm font-bold">
+                                                <option value="Plumber" {{ 'selected' if settings.business_type == 'Plumber' else '' }}>Tesisatçı (Plumber)</option>
+                                                <option value="HomeAndConstructionBusiness" {{ 'selected' if settings.business_type == 'HomeAndConstructionBusiness' else '' }}>İnşaat & Ev</option>
+                                                <option value="LocalBusiness" {{ 'selected' if settings.business_type == 'LocalBusiness' else '' }}>Yerel İşletme</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Sitemap Linki -->
+                                    {% if settings.site_url %}
+                                    <div class="mt-4 p-4 bg-slate-900/60 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                                        <i data-lucide="file-code" class="w-5 h-5 text-cyan-400 flex-shrink-0"></i>
+                                        <div>
+                                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Sitemap URL (Google Search Console'a ekleyin)</p>
+                                            <a href="/sitemap.xml" target="_blank" class="text-cyan-400 text-xs font-bold hover:underline">{{ settings.site_url }}/sitemap.xml</a>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Genel Meta -->
+                                <div class="bg-slate-900/40 p-8 rounded-[35px] border border-slate-700/50 space-y-6">
+                                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-3">
+                                        <i data-lucide="globe" class="w-4 h-4"></i> Genel Açıklama & Anahtar Kelimeler (Tüm Sayfalarda Yedek)
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">GENEL META AÇIKLAMA</label>
+                                            <textarea name="md" rows="3" class="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm leading-relaxed text-slate-300 focus:ring-2 focus:ring-cyan-500 transition-all" placeholder="150-160 karakter arasında kalın...">{{ settings.meta_desc or '' }}</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">GENEL ANAHTAR KELİMELER</label>
+                                            <input type="text" name="mk" value="{{ settings.meta_keys or '' }}" class="w-full px-5 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-sm text-cyan-400 font-bold" placeholder="tesisatçı, su kaçağı, silivri, acil tesisat">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sayfa Bazlı SEO -->
+                                <div class="space-y-6">
+                                    <h4 class="text-sm font-black text-white uppercase tracking-widest flex items-center gap-3">
+                                        <i data-lucide="layers" class="w-5 h-5 text-indigo-400"></i> Sayfa Bazlı SEO (Her Sayfa Ayrı Optimize)
+                                    </h4>
+
+                                    {% set seo_pages = [
+                                        {'key': 'home', 'icon': 'home', 'color': 'indigo', 'label': '🏠 Ana Sayfa (/)'},
+                                        {'key': 'about', 'icon': 'users', 'color': 'purple', 'label': '👥 Hakkımızda'},
+                                        {'key': 'services', 'icon': 'zap', 'color': 'amber', 'label': '⚡ Hizmetler'},
+                                        {'key': 'gallery', 'icon': 'image', 'color': 'pink', 'label': '🖼️ Galeri'},
+                                        {'key': 'contact', 'icon': 'phone', 'color': 'emerald', 'label': '📞 İletişim'}
+                                    ] %}
+                                    {% for sp in seo_pages %}
+                                    <div class="bg-slate-900/40 p-6 rounded-[30px] border border-slate-700/50 space-y-4">
+                                        <h5 class="text-sm font-black text-white flex items-center gap-3">
+                                            <span class="w-8 h-8 bg-{{ sp.color }}-500/10 rounded-xl flex items-center justify-center text-{{ sp.color }}-400">
+                                                <i data-lucide="{{ sp.icon }}" class="w-4 h-4"></i>
+                                            </span>
+                                            {{ sp.label }}
+                                        </h5>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div>
+                                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-1">SAYFA BAŞLIĞI (Title Tag)</label>
+                                                <input type="text" name="seo_{{ sp.key }}_title"
+                                                    value="{{ settings['seo_' + sp.key + '_title'] or '' }}"
+                                                    placeholder="Firma Adı | Sayfa Başlığı"
+                                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-xs font-bold text-white">
+                                            </div>
+                                            <div>
+                                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-1">META AÇIKLAMA (max 160 karakter)</label>
+                                                <input type="text" name="seo_{{ sp.key }}_desc"
+                                                    value="{{ settings['seo_' + sp.key + '_desc'] or '' }}"
+                                                    placeholder="Bu sayfanın açıklaması..."
+                                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-xs text-slate-400">
+                                            </div>
+                                            <div>
+                                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-1">ANAHTAR KELİMELER</label>
+                                                <input type="text" name="seo_{{ sp.key }}_keys"
+                                                    value="{{ settings['seo_' + sp.key + '_keys'] or '' }}"
+                                                    placeholder="kelime1, kelime2, ..."
+                                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-2xl text-xs text-cyan-400 font-bold">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- SEO İpucu -->
+                                <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[35px] p-8 shadow-2xl">
+                                    <div class="flex items-start gap-5">
+                                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="rocket" class="w-6 h-6 text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-black text-base mb-3">Yerel SEO İçin Kritik Adımlar</h4>
+                                            <ul class="text-indigo-100 text-xs space-y-2 font-medium">
+                                                <li>✅ <strong>Google Business Profile</strong>'ınızı oluşturun/güncelleyin (maps.google.com/business)</li>
+                                                <li>✅ Alan adınızı girin → sitemap.xml otomatik oluşturulur</li>
+                                                <li>✅ <strong>Google Search Console</strong>'a sitenizi ekleyip sitemap'i gönderin</li>
+                                                <li>✅ Her sayfa için farklı başlık ve açıklama yazın</li>
+                                                <li>✅ Şehir + ilçe adını başlıklara ve açıklamalara ekleyin</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ALT SEKME: FOOTER & GÜVENLİK -->
+                            <div id="sub-footer" class="sub-pane hidden space-y-8 animate__animated animate__fadeIn">
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                    <div class="lg:col-span-2 space-y-8">
+                                        <!-- İstatistikler -->
+                                        <div class="p-10 bg-slate-900/40 rounded-3xl border border-slate-700/50 space-y-8">
+                                            <h4 class="text-xl font-black text-indigo-400 uppercase flex items-center gap-4 italic tracking-tighter">
+                                                <span class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center"><i data-lucide="trending-up" class="w-6 h-6"></i></span>
+                                                Sayılarla Başarımız (Sayaçlar)
+                                            </h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {% for i in range(1, 5) %}
+                                                <div class="p-6 bg-slate-800/50 border-2 border-slate-700 rounded-3xl flex items-center gap-6 group hover:border-indigo-500/50 hover:bg-slate-800 transition-all">
+                                                    <div class="text-sm font-black text-slate-500 group-hover:text-indigo-400 transition-colors">{{ i }}</div>
+                                                    <div class="flex-1 space-y-1">
+                                                        <input type="text" name="s{{ i }}v" value="{{ settings['stat' ~ i ~ '_value'] or '' }}" class="w-full bg-transparent border-0 p-0 text-2xl font-black text-white focus:ring-0 placeholder:text-slate-800" placeholder="0">
+                                                        <input type="text" name="s{{ i }}t" value="{{ settings['stat' ~ i ~ '_title'] or '' }}" class="w-full bg-transparent border-0 p-0 text-[11px] text-slate-500 uppercase font-black focus:ring-0" placeholder="BAŞLIK">
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <!-- Footer Metni -->
+                                        <div class="p-10 bg-slate-900/40 rounded-3xl border border-slate-700/50 space-y-6">
+                                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><i data-lucide="text-quote"></i> Sayfa Sonu (Footer) Açıklaması</h4>
+                                            <textarea name="ft" rows="5" class="w-full px-8 py-6 bg-slate-800/50 border border-slate-700 rounded-3xl text-sm italic text-slate-400 leading-loose shadow-inner">{{ settings.footer_text or '' }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-8">
+                                        <!-- Popup Bölümü -->
+                                        <div class="p-8 bg-indigo-500/5 rounded-3xl border border-indigo-500/20 space-y-6">
+                                            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="layers" class="w-4 h-4"></i> Açılış Reklamı (Popup)
+                                            </h4>
+                                            <div class="space-y-4">
+                                                <label class="flex items-center gap-3 cursor-pointer p-3 bg-slate-900/40 rounded-xl hover:bg-slate-900 transition">
+                                                    <input type="checkbox" name="pa" value="1" {% if settings.popup_active %}checked{% endif %} class="w-5 h-5 rounded border-slate-700 text-indigo-600 bg-slate-800 focus:ring-indigo-500">
+                                                    <span class="text-xs font-black text-indigo-200 uppercase tracking-tighter">REKLAMI GÖSTER</span>
+                                                </label>
+                                                <div class="p-4 bg-slate-900 border border-slate-700 rounded-2xl">
+                                                    <label class="text-[9px] font-black text-slate-500 block mb-2 uppercase italic">REKLAM GÖRSELİ</label>
+                                                    <input type="file" name="popup_file" class="w-full text-[10px] text-slate-600">
+                                                </div>
+                                                <input type="text" name="pl" value="{{ settings.popup_link or '' }}" placeholder="Tıklama Linki (https://..)" class="w-full px-5 py-3 bg-slate-900 border border-slate-700 rounded-xl text-[10px]">
+                                            </div>
+                                        </div>
+
+                                        <!-- Şifre Bölümü -->
+                                        <div class="p-8 bg-red-500/5 rounded-3xl border border-red-500/20 space-y-6">
+                                            <h4 class="text-xs font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
+                                                <i data-lucide="lock" class="w-4 h-4"></i> Admin Güvenliği
+                                            </h4>
+                                            <div class="space-y-4">
+                                                <p class="text-[10px] text-red-500/60 font-medium leading-tight italic">Panel giriş şifresini değiştirmek için doldurun. Boş bırakırsanız mevcut şifre kalır.</p>
+                                                <div class="relative">
+                                                    <i data-lucide="key-round" class="absolute left-4 top-4 text-red-500/30 w-4 h-4"></i>
+                                                    <input type="password" name="new_pass" class="w-full bg-slate-950 border-2 border-red-500/10 rounded-2xl py-4 pl-12 pr-4 text-xs focus:border-red-500 transition-all italic" placeholder="Yeni Giriş Şifresi">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SABİT KAYDET BUTONU -->
+                        <div class="fixed bottom-10 right-10 z-[100] flex flex-col items-end gap-3 pointer-events-none">
+                            <div class="bg-slate-900/90 backdrop-blur-md border border-slate-700 px-6 py-3 rounded-2xl shadow-2xl animate__animated animate__fadeInRight animate__delay-1s pointer-events-auto">
+                                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">DURUM: Düzenleme Modu</p>
+                                <div class="flex items-center gap-4">
+                                    <div class="flex -space-x-2">
+                                        <div class="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-900"></div>
+                                        <div class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-900"></div>
+                                        <div class="w-6 h-6 rounded-full bg-orange-500 border-2 border-slate-900"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-white tracking-widest uppercase">Ayarlarınızı Kaydetmeyi Unutmayın</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="group relative bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-5 rounded-3xl font-black text-xl transition-all shadow-[0_20px_50px_rgba(79,70,229,0.4)] hover:shadow-[0_25px_60px_rgba(79,70,229,0.7)] hover:-translate-y-2 pointer-events-auto flex items-center gap-4">
+                                <i data-lucide="save" class="w-8 h-8 group-hover:rotate-12 transition-transform"></i>
+                                DEĞİŞİKLİKLERİ YAYINLA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="services" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-indigo-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(99,102,241,0.4)]">
+                                    <i data-lucide="cog"></i>
+                                </span>
+                                Hizmet Kataloğu
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Sitenizde listelenen teknik hizmetlerin tamamı</p>
+                        </div>
+                    </div>
+                    
+                    <form action="/add_service" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-2">HİZMET ADI</label>
+                            <input type="text" name="n" placeholder="örn: Kombi Bakımı" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-indigo-500 transition-all font-bold" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-2">İKON (FONT-AWESOME)</label>
+                            <input type="text" name="i" placeholder="fa-water" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-indigo-500 transition-all" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-2">HİZMET GÖRSELİ</label>
+                            <div class="relative">
+                                <input type="file" name="img" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="w-full bg-slate-800 border-2 border-slate-700 border-dashed rounded-2xl p-4 text-xs text-slate-500 flex items-center justify-center gap-2">
+                                    <i data-lucide="upload" class="w-4 h-4"></i> Dosya Seç
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 lg:col-span-2">
+                            <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-2">AÇIKLAMA</label>
+                            <textarea name="d" placeholder="Kısa bir tanıtım..." class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-indigo-500 transition-all h-[58px] resize-none" required></textarea>
+                        </div>
+                        <div class="space-y-2 lg:col-span-2">
+                            <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-2">HİZMET VİDEOSU (OPSİYONEL)</label>
+                            <div class="relative">
+                                <input type="file" name="video" accept="video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="w-full bg-slate-800 border-2 border-slate-700 border-dashed rounded-2xl p-4 text-xs text-slate-500 flex items-center justify-center gap-2">
+                                    <i data-lucide="video" class="w-4 h-4"></i> Video Seç
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-indigo-500/25 lg:col-span-4 flex items-center justify-center gap-3 group">
+                            <i data-lucide="plus" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            YENİ HİZMET EKLE VE YAYINLA
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for s in services %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[40px] p-8 group hover:border-indigo-500/50 hover:bg-slate-800/80 transition-all duration-500 relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-600/5 group-hover:bg-indigo-600/10 rounded-full blur-3xl transition-all"></div>
+                        
+                        <div class="flex justify-between items-start mb-8 relative z-50">
+                            <div class="w-20 h-20 bg-indigo-500/10 rounded-3xl flex items-center justify-center text-indigo-400 text-3xl shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                <i class="fa {{ s.icon }}"></i>
+                            </div>
+                            <div class="flex gap-2 relative z-50">
+                             <form action="/delete_service/{{ s.id }}" method="POST" onsubmit="return confirm('Bu hizmeti silmek istediğinize emin misiniz?');" class="inline">
+                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                 <button type="submit" class="w-10 h-10 bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all cursor-pointer" title="Hizmeti Sil">
+                                     <i data-lucide="trash-2" class="w-5 h-5 pointer-events-none"></i>
+                                 </button>
+                             </form>
+                            </div>
+                        </div>
+
+                        <form action="/update_service" method="post" enctype="multipart/form-data" class="space-y-5">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="id" value="{{ s.id }}">
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-2">Hizmet Adı</label>
+                                <input type="text" name="n" value="{{ s.name }}" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-sm font-black text-white focus:border-indigo-500 focus:bg-slate-800 transition-all">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-2">İkon Kodu</label>
+                                <input type="text" name="i" value="{{ s.icon }}" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-xs font-mono text-slate-400">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-2">Kısa Açıklama</label>
+                                <textarea name="d" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-xs text-slate-400 h-28 resize-none leading-relaxed">{{ s.desc }}</textarea>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-2">Görsel (Opsiyonel)</label>
+                                {% if s.img %}
+                                <div class="relative group/img rounded-2xl overflow-hidden aspect-video border border-slate-700">
+                                    <img src="/static/uploads/{{ s.img }}" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-indigo-900/80 opacity-0 group-hover/img:opacity-100 transition-all duration-300 flex items-center justify-center">
+                                        <div class="text-center">
+                                            <i data-lucide="image-plus" class="w-8 h-8 text-white mx-auto mb-2 pointer-events-none"></i>
+                                            <p class="text-[10px] font-black text-white pointer-events-none">DEĞİŞTİRMEK İÇİN TIKLAYIN</p>
+                                        </div>
+                                        <input type="file" name="img" class="absolute inset-0 opacity-0 cursor-pointer">
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="relative p-6 bg-slate-800/50 border-2 border-dashed border-slate-700 rounded-2xl text-center group/file hover:border-indigo-500/50 transition-all">
+                                    <i data-lucide="upload" class="w-8 h-8 text-slate-600 mx-auto mb-2 transition-colors group-hover/file:text-indigo-400 pointer-events-none"></i>
+                                    <p class="text-[10px] font-black text-slate-500 pointer-events-none">RESİM YÜKLE</p>
+                                    <input type="file" name="img" class="absolute inset-0 opacity-0 cursor-pointer">
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-2">Hizmet Videosu (Opsiyonel)</label>
+                                {% if s.video %}
+                                <div class="relative group/vid rounded-2xl overflow-hidden aspect-video border border-slate-700 bg-slate-950">
+                                    <video class="w-full h-full object-cover opacity-50">
+                                        <source src="/static/uploads/{{ s.video }}" type="video/mp4">
+                                    </video>
+                                    <div class="absolute inset-0 bg-indigo-900/80 opacity-0 group-hover/vid:opacity-100 transition-all duration-300 flex items-center justify-center z-10">
+                                        <div class="text-center pointer-events-none">
+                                            <i data-lucide="video" class="w-8 h-8 text-white mx-auto mb-2"></i>
+                                            <p class="text-[10px] font-black text-white">VİDEOYU DEĞİŞTİR</p>
+                                        </div>
+                                        <input type="file" name="video" accept="video/*" class="absolute inset-0 opacity-0 cursor-pointer z-20">
+                                    </div>
+                                    <button type="submit" formaction="/remove_service_video/{{ s.id }}" onclick="return confirm('Bu videoyu kaldırmak istediğinize emin misiniz?');" class="absolute top-2 left-2 z-30 w-8 h-8 bg-red-500/90 text-white rounded-lg flex items-center justify-center hover:bg-red-500 hover:scale-110 transition-all shadow-lg cursor-pointer" title="Videoyu Kaldır">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                </div>
+                                {% else %}
+                                <div class="relative p-6 bg-slate-800/50 border-2 border-dashed border-slate-700 rounded-2xl text-center group/file hover:border-indigo-500/50 transition-all">
+                                    <i data-lucide="video" class="w-8 h-8 text-slate-600 mx-auto mb-2 transition-colors group-hover/file:text-indigo-400"></i>
+                                    <p class="text-[10px] font-black text-slate-500">VİDEO YÜKLE</p>
+                                    <input type="file" name="video" accept="video/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl text-xs font-black tracking-widest uppercase transition-all shadow-lg hover:shadow-indigo-500/40 flex items-center justify-center gap-3">
+                                <i data-lucide="save" class="w-4 h-4"></i> GÜNCELLE
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="gallery" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-pink-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(236,72,153,0.4)]">
+                                    <i data-lucide="image"></i>
+                                </span>
+                                Resim Galerisi
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Yapılan işlere ait görsel kütüphanesi</p>
+                        </div>
+                    </div>
+                    
+                    <form action="/upload_img" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-4">
+                            <div class="relative p-8 bg-slate-800 border-2 border-dashed border-slate-700 rounded-2xl text-center group hover:border-pink-500 transition-all">
+                                <i data-lucide="upload-cloud" class="w-10 h-10 text-slate-600 mx-auto mb-3 transition-colors group-hover:text-pink-400"></i>
+                                <p class="text-[11px] font-black text-slate-500 group-hover:text-slate-300">RESİM DOSYASI SEÇİN VEYA BIRAKIN</p>
+                                <input type="file" name="file" class="absolute inset-0 opacity-0 cursor-pointer" required>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="text" name="t" placeholder="Resim Başlığı (örn: Mutfak Tesisatı)" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-pink-500 transition-all font-bold">
+                            <textarea name="d" placeholder="Kısa bir açıklama..." class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-pink-500 transition-all h-24 resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="bg-pink-600 hover:bg-pink-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-pink-500/25 md:col-span-2 flex items-center justify-center gap-3 group">
+                            <i data-lucide="camera" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            RESMİ GALERİYE EKLE
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for g in gallery %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[40px] overflow-hidden group hover:border-pink-500/50 hover:bg-slate-800/80 transition-all duration-500">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="/static/uploads/{{ g.img }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute top-4 right-4">
+                                <button onclick="securePost('/delete_img/{{ g.id }}')" class="w-10 h-10 bg-black/60 backdrop-blur-md text-white rounded-xl flex items-center justify-center hover:bg-red-600 transition-all" title="Resmi Sil">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <form action="/update_img_info" method="post" class="space-y-4">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="id" value="{{ g.id }}">
+                                <input type="text" name="t" value="{{ g.title or '' }}" placeholder="Resim Başlığı" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white focus:bg-slate-800 transition-all">
+                                <textarea name="d" placeholder="Açıklama" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl p-3 text-xs text-slate-400 h-20 resize-none leading-relaxed">{{ g.desc or '' }}</textarea>
+                                <button type="submit" class="w-full bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Güncelle</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="videos" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-emerald-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)]">
+                                    <i data-lucide="play"></i>
+                                </span>
+                                Video Galerisi
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Uygulama videoları ve teknik anlatımlar</p>
+                        </div>
+                    </div>
+                    
+                    <form action="/upload_video" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-4">
+                            <input type="text" name="t" placeholder="Video Başlığı" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-emerald-500 transition-all font-bold" required>
+                            <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest ml-2 block italic">VİDEO DOSYASI (MP4)</label>
+                            <div class="relative p-6 bg-slate-800 border-2 border-dashed border-slate-700 rounded-2xl text-center group hover:border-emerald-500 transition-all">
+                                <i data-lucide="file-video" class="w-10 h-10 text-slate-600 mx-auto mb-2 transition-colors group-hover:text-emerald-400"></i>
+                                <p class="text-[11px] font-black text-slate-500 group-hover:text-slate-300">KLİP SEÇİN</p>
+                                <input type="file" name="video_file" class="absolute inset-0 opacity-0 cursor-pointer" required>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest ml-2 block italic">VİDEO AÇIKLAMASI</label>
+                            <textarea name="d" placeholder="Neler oluyor bu videoda?" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-emerald-500 transition-all h-[154px] resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-emerald-500/25 md:col-span-2 flex items-center justify-center gap-3 group">
+                            <i data-lucide="upload" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            VİDEOYU SİSTEME YÜKLE
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for v in videos %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[40px] overflow-hidden group hover:border-emerald-500/50 transition-all duration-500">
+                        <div class="p-6">
+                            <video class="w-full rounded-3xl aspect-video bg-black shadow-2xl" controls preload="none">
+                                <source src="/static/uploads/{{ v.vid_path }}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="p-8 pt-0">
+                            <form action="/update_video_info" method="post" class="space-y-4">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="id" value="{{ v.id }}">
+                                <input type="text" name="t" value="{{ v.title }}" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-sm font-black text-white focus:bg-slate-800 transition-all">
+                                <textarea name="d" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-xs text-slate-400 h-20 resize-none leading-relaxed">{{ v.desc or '' }}</textarea>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <button type="submit" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Güncelle</button>
+                                    <button type="button" onclick="securePost('/delete_video/{{ v.id }}')" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Sil</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="messages" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex justify-between items-center relative z-10 mb-8">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-indigo-600 rounded-3xl flex items-center justify-center text-white">
+                                    <i data-lucide="mail"></i>
+                                </span>
+                                Müşteri Talepleri
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 rounded-3xl border border-slate-700/50 backdrop-blur-xl overflow-hidden relative z-10">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-slate-800/50 border-b border-slate-700">
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">MÜŞTERİ</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">HİZMET</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">MESAJ ÖZETİ</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">TARİH</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">EYLEM</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    {% for m in messages %}
+                                    <tr class="{% if m.is_read == 0 %}bg-indigo-500/5{% endif %} hover:bg-slate-800/80 transition-all group">
+                                        <td class="p-6">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700">
+                                                    {{ m.name[0]|upper }}
+                                                </div>
+                                                <div>
+                                                    <div class="font-bold text-white flex items-center gap-2">
+                                                        {{ m.name }}
+                                                        {% if m.is_read == 0 %}
+                                                        <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="text-[10px] text-slate-500 font-mono">{{ m.phone }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-6">
+                                            <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full text-[10px] font-black uppercase">
+                                                {{ m.service }}
+                                            </span>
+                                        </td>
+                                        <td class="p-6">
+                                            <p class="text-xs text-slate-400 max-w-xs truncate italic" title="{{ m.msg }}">"{{ m.msg }}"</p>
+                                        </td>
+                                        <td class="p-6">
+                                            <div class="text-[10px] text-slate-500 font-bold uppercase">{{ m.date }}</div>
+                                        </td>
+                                        <td class="p-6 text-right">
+                                            <div class="flex justify-end gap-2">
+                                                <button class="msg-btn w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-{{ 'indigo-400' if m.is_read == 0 else 'slate-500' }} hover:border-indigo-500 transition-all" 
+                                                        data-id="{{ m.id }}" data-name="{{ m.name }}" data-phone="{{ m.phone }}" 
+                                                        data-service="{{ m.service }}" data-msg="{{ m.msg }}" data-read="{{ m.is_read }}">
+                                                    <i data-lucide="{{ m.is_read == 0 and 'eye' or 'mail-open' }}" class="w-4 h-4"></i>
+                                                </button>
+                                                <button onclick="securePost('/delete_message/{{ m.id }}')" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="testimonials" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-amber-500/5 border border-amber-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-amber-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(245,158,11,0.4)]">
+                                    <i data-lucide="message-square"></i>
+                                </span>
+                                Müşteri Yorumları
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Referanslarınız ve müşteri memnuniyeti</p>
+                        </div>
+                    </div>
+                    
+                    <form action="/add_testimonial" method="post" class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest ml-2">MÜŞTERİ ADI</label>
+                            <input type="text" name="n" placeholder="örn: Ahmet Yılmaz" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-amber-500 transition-all font-bold" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest ml-2">PUANLAMA</label>
+                            <select name="s" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-amber-500 transition-all font-bold">
+                                <option value="5">⭐⭐⭐⭐⭐ 5 Yıldız</option>
+                                <option value="4">⭐⭐⭐⭐ 4 Yıldız</option>
+                                <option value="3">⭐⭐⭐ 3 Yıldız</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2 lg:col-span-1">
+                            <label class="text-[10px] font-black text-amber-400 uppercase tracking-widest ml-2">YORUMU</label>
+                            <textarea name="c" placeholder="Müşterinin görüşleri..." class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-amber-500 transition-all h-[58px] resize-none" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-amber-500/25 md:col-span-3 flex items-center justify-center gap-3 group">
+                            <i data-lucide="plus" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            YENİ YORUM EKLE
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for t in testimonials %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[40px] p-10 group hover:border-amber-500/50 hover:bg-slate-800/80 transition-all duration-500 relative">
+                        <div class="absolute top-8 right-8 text-amber-500/20 group-hover:text-amber-500/40 transition-colors">
+                            <i data-lucide="quote" class="w-12 h-12"></i>
+                        </div>
+                        
+                        <form action="/update_testimonial" method="post" class="space-y-6">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="id" value="{{ t.id }}">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                                    <i data-lucide="user"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <input type="text" name="n" value="{{ t.name }}" class="w-full bg-transparent border-0 p-0 text-lg font-black text-white focus:ring-0">
+                                    <div class="flex text-amber-400 text-xs mt-1">
+                                        {% for i in range(t.stars) %}⭐{% endfor %}
+                                        <select name="s" class="hidden">
+                                            <option value="5" {% if t.stars == 5 %}selected{% endif %}>5</option>
+                                            <option value="4" {% if t.stars == 4 %}selected{% endif %}>4</option>
+                                            <option value="3" {% if t.stars == 3 %}selected{% endif %}>3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <textarea name="c" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-sm text-slate-400 italic leading-relaxed h-32 resize-none">"{{ t.content }}"</textarea>
+                            
+                            <div class="flex gap-4 pt-4 border-t border-slate-800">
+                                <button type="submit" class="flex-1 bg-slate-800 hover:bg-amber-600 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">GÜNCELLE</button>
+                                <button type="button" onclick="securePost('/delete_testimonial/{{ t.id }}')" class="w-12 h-12 bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="faq" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-cyan-500/5 border border-cyan-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-cyan-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(6,182,212,0.4)]">
+                                    <i data-lucide="help-circle"></i>
+                                </span>
+                                Yardım & S.S.S.
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Sıkça sorulan soruları yönetin</p>
+                        </div>
+                    </div>
+                    <form action="/add_faq" method="post" class="space-y-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-cyan-400 uppercase tracking-widest ml-2">SORU</label>
+                            <input type="text" name="q" placeholder="örn: Hizmet bölgeleriniz nereler?" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-cyan-500 transition-all font-bold" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-cyan-400 uppercase tracking-widest ml-2">CEVAP</label>
+                            <textarea name="a" placeholder="Detaylı bir cevap yazın..." class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-cyan-500 transition-all h-24 resize-none" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-cyan-500/25 flex items-center justify-center gap-3 group">
+                            <i data-lucide="plus" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            YENİ SORU-CEVAP EKLE
+                        </button>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    {% for f in faqs %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[35px] p-8 group hover:border-cyan-500/50 transition-all duration-500">
+                        <form action="/update_faq" method="post" class="space-y-6">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="id" value="{{ f.id }}">
+                            <div class="flex justify-between items-start gap-6">
+                                <div class="flex-1 space-y-4">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-cyan-500 font-black italic">Q.</span>
+                                        <input type="text" name="q" value="{{ f.question }}" class="w-full bg-transparent border-0 p-0 text-xl font-black text-white focus:ring-0">
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <span class="text-slate-600 font-black italic mt-1">A.</span>
+                                        <textarea name="a" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-sm text-slate-400 leading-relaxed h-28 resize-none">{{ f.answer }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3">
+                                    <button type="submit" class="w-12 h-12 bg-cyan-500/10 text-cyan-500 rounded-2xl flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all shadow-lg" title="Güncelle">
+                                        <i data-lucide="save" class="w-6 h-6"></i>
+                                    </button>
+                                    <button type="button" onclick="securePost('/delete_faq/{{ f.id }}')" class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-lg" title="Sil">
+                                         <i data-lucide="trash-2" class="w-6 h-6"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="timeline" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-purple-500/5 border border-purple-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                                <span class="w-14 h-14 bg-purple-500 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]">
+                                    <i data-lucide="history"></i>
+                                </span>
+                                Başarı Yolculuğu
+                            </h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mt-3 ml-1">Şirket tarihçesi ve kilometre taşları</p>
+                        </div>
+                    </div>
+                    
+                    <form action="/add_timeline" method="post" class="grid grid-cols-1 md:grid-cols-4 gap-6 bg-slate-900/60 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-xl relative z-10">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest ml-2">YIL</label>
+                            <input type="text" name="y" placeholder="örn: 2024" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-purple-500 transition-all font-bold" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest ml-2">BAŞLIK</label>
+                            <input type="text" name="t" placeholder="örn: İlk Şube Açılışı" class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-purple-500 transition-all font-bold" required>
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-[10px] font-black text-purple-400 uppercase tracking-widest ml-2">AÇIKLAMA</label>
+                            <textarea name="c" placeholder="O yıla ait detaylar..." class="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 text-white focus:border-purple-500 transition-all h-[58px] resize-none" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-black py-5 px-8 rounded-3xl transition-all shadow-xl hover:shadow-purple-500/25 md:col-span-4 flex items-center justify-center gap-3 group">
+                            <i data-lucide="milestone" class="w-6 h-6 group-hover:scale-125 transition-transform"></i>
+                            YOLCULUĞA YENİ DURAK EKLE
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    {% for t in timeline %}
+                    <div class="bg-slate-900/40 border-2 border-slate-800 rounded-[35px] p-8 group hover:border-purple-500/50 transition-all duration-500">
+                        <form action="/update_timeline" method="post" class="flex flex-col md:flex-row gap-8">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="id" value="{{ t.id }}">
+                            <div class="flex flex-col justify-center">
+                                <input type="text" name="y" value="{{ t.year }}" class="text-4xl font-black text-purple-500 bg-purple-500/10 px-6 py-4 rounded-3xl text-center w-32 border-0 focus:ring-4 focus:ring-purple-500/50">
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <input type="text" name="t" value="{{ t.title }}" class="w-full bg-transparent border-0 p-0 text-2xl font-black text-white focus:ring-0">
+                                <textarea name="c" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-sm text-slate-400 italic leading-relaxed h-28 resize-none">"{{ t.content }}"</textarea>
+                            </div>
+                            <div class="flex flex-row md:flex-col justify-center gap-4">
+                                <button type="submit" class="w-14 h-14 bg-green-500/10 text-green-500 rounded-2xl flex items-center justify-center hover:bg-green-500 hover:text-white transition-all shadow-lg" title="Güncelle">
+                                     <i data-lucide="save" class="w-7 h-7"></i>
+                                </button>
+                                <button type="button" onclick="securePost('/delete_timeline/{{ t.id }}')" class="w-14 h-14 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-lg" title="Sil">
+                                     <i data-lucide="trash-2" class="w-7 h-7"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="security" class="tab-pane hidden space-y-10 animate__animated animate__fadeIn">
+                <div class="bg-red-500/5 border border-red-500/20 rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-red-500/10 blur-[100px] rounded-full"></div>
+                    <div class="flex justify-between items-center relative z-10 mb-8">
+                        <h3 class="text-3xl font-black text-white italic tracking-tighter flex items-center gap-4">
+                            <span class="w-14 h-14 bg-red-600 rounded-3xl flex items-center justify-center text-white shadow-[0_10px_30px_rgba(220,38,38,0.4)]">
+                                <i data-lucide="shield"></i>
+                            </span>
+                            Sistem İşlem Günlükleri
+                        </h3>
+                    </div>
+
+                    <div class="bg-slate-900/60 rounded-3xl border border-slate-700/50 backdrop-blur-xl overflow-hidden relative z-10">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-slate-800/50 border-b border-slate-700">
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">İŞLEM</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">KULLANICI</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">IP ADRESİ</th>
+                                        <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">TARİH</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    {% for log in logs %}
+                                    <tr class="hover:bg-slate-800/80 transition-all">
+                                        <td class="p-6 text-sm font-bold text-slate-200">{{ log.action }}</td>
+                                        <td class="p-6">
+                                            <span class="px-3 py-1 bg-slate-800 rounded-full text-[10px] font-black uppercase text-slate-400 border border-slate-700">
+                                                {{ log.user }}
+                                            </span>
+                                        </td>
+                                        <td class="p-6 text-[10px] font-mono text-slate-500">{{ log.ip }}</td>
+                                        <td class="p-6 text-[10px] font-bold text-slate-500 uppercase">{{ log.date }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Mesaj Detay Modalı -->
+    <div id="msgModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate__animated animate__zoomIn">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-indigo-500/5">
+                <h3 class="text-xl font-bold text-indigo-400">📩 Mesaj Detayı</h3>
+                <button onclick="closeMsg()" class="text-slate-500 hover:text-white transition"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-8 space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                        <p class="text-[10px] uppercase font-black text-slate-500 mb-1">Gönderen</p>
+                        <p id="mName" class="font-bold text-slate-200">-</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                        <p class="text-[10px] uppercase font-black text-slate-500 mb-1">Telefon</p>
+                        <p id="mPhone" class="font-bold text-slate-200">-</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p class="text-[10px] uppercase font-black text-slate-500 mb-1">İlgilenilen Hizmet</p>
+                    <p id="mService" class="font-bold text-indigo-400">-</p>
+                </div>
+                <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50">
+                    <p class="text-[10px] uppercase font-black text-slate-500 mb-1">Mesaj İçeriği</p>
+                    <p id="mText" class="text-slate-300 leading-relaxed italic">"-"</p>
+                </div>
+                <div id="readBtnArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active-tab'));
+            document.getElementById('btn-' + tabId).classList.add('active-tab');
+
+            const titles = { 
+                'dashboard': '📊 Kontrol Paneli', 
+                'website': '🌐 Website Yönetimi', 
+                'services': '🔧 Hizmet Yönetimi', 
+                'gallery': '🖼️ Resim Galerisi', 
+                'videos': '📹 Video Galerisi',
+                'messages': '📩 Gelen Mesajlar',
+                'testimonials': '💬 Müşteri Yorumları',
+                'faq': '❓ Sıkça Sorulan Sorular',
+                'timeline': '🗓️ Başarı Yolculuğu',
+                'security': '🛡️ Güvenlik Günlüğü'
+            };
+
+            document.getElementById('tab-title').innerText = titles[tabId];
+            
+            // Eğer website tabı açıldıysa varsayılan sub-tabı göster
+            if(tabId === 'website') {
+                showSubTab('sub-general');
+            }
+        }
+
+        function showSubTab(subId) {
+            document.querySelectorAll('.sub-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById(subId).classList.remove('hidden');
+            document.querySelectorAll('.sub-nav-btn').forEach(el => {
+                el.classList.remove('active-sub-tab');
+                el.classList.add('text-slate-500');
+            });
+            document.getElementById('btn-' + subId).classList.add('active-sub-tab');
+            document.getElementById('btn-' + subId).classList.remove('text-slate-500');
+        }
+
+        function showPageTab(pageId) {
+            // Tüm sayfa panellerini gizle
+            document.querySelectorAll('.page-pane').forEach(el => el.classList.add('hidden'));
+            // Seçilen paneli göster
+            document.getElementById(pageId).classList.remove('hidden');
+            // Tüm butonları pasif yap
+            document.querySelectorAll('.page-tab-btn').forEach(el => {
+                el.classList.remove('active-page-tab', 'ring-2', 'ring-offset-2', 'ring-offset-slate-800');
+            });
+            // Seçilen butonu aktif yap
+            const btn = document.getElementById('btn-' + pageId);
+            if (btn) {
+                btn.classList.add('active-page-tab');
+            }
+        }
+
+        function securePost(url, skipConfirm=false) {
+            if (!skipConfirm && !confirm('Bu işlemi gerçekleştirmek istediğinize emin misiniz?')) return;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = "{{ csrf_token() }}";
+            form.appendChild(csrfInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        document.querySelectorAll('.msg-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const data = this.dataset;
+                document.getElementById('mName').innerText = data.name;
+                document.getElementById('mPhone').innerText = data.phone;
+                document.getElementById('mService').innerText = data.service;
+                document.getElementById('mText').innerText = data.msg;
+                
+                if (data.read == "0") {
+                    document.getElementById('readBtnArea').innerHTML = `
+                        <button onclick="securePost('/read_message/${data.id}', true)" class="w-full block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg">Okundu Olarak İşaretle</button>
+                    `;
+                } else {
+                    document.getElementById('readBtnArea').innerHTML = '';
+                }
+                document.getElementById('msgModal').classList.remove('hidden');
+            });
+        });
+
+        function closeMsg() {
+            document.getElementById('msgModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

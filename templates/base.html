@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr" prefix="og: https://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# ======= SAYFA BAZLI SEO ======= #}
+    {% if page_title == 'about' %}
+        {% set _title = s.seo_about_title or (s.title + ' | Hakkımızda - Kurumsal Kimliğimiz') %}
+        {% set _desc = s.seo_about_desc or ('SİLİVRİ SU KAÇAĞI TESPİTİ ' + (s.stat1_value or '20') + ' yıllık deneyimimiz, vizyonumuz ve misyonumuz hakkında bilgi alın.') %}
+        {% set _keys = s.seo_about_keys or 'tesisat firması, kurumsal tesisat, ' + (s.district or 'silivri') + ' tesisat' %}
+    {% elif page_title == 'services' %}
+        {% set _title = s.seo_services_title or (s.title + ' | Hizmetlerimiz - Profesyonel Tesisat') %}
+        {% set _desc = s.seo_services_desc or (s.district or 'Silivri') + ' ve İstanbul genelinde su kaçağı tespiti, tıkanıklık açma, petek temizliği ve daha fazlası.' %}
+        {% set _keys = s.seo_services_keys or 'silivri su kaçağı tespiti, silivri tıkanıklık açma, petek temizliği, ' + (s.district or 'silivri') %}
+    {% elif page_title == 'gallery' %}
+        {% set _title = s.seo_gallery_title or (s.title + ' | Galeri - Çalışmalarımız') %}
+        {% set _desc = s.seo_gallery_desc or 'Tamamlanan tesisat projelerimizden fotoğraf ve video kareler. Kaliteli işçiliğimizi görsel olarak inceleyin.' %}
+        {% set _keys = s.seo_gallery_keys or 'tesisat galeri, su kaçağı öncesi sonrası, ' + (s.district or 'silivri') %}
+    {% elif page_title == 'contact' %}
+        {% set _title = s.seo_contact_title or (s.title + ' | İletişim - 7/24 Ulaşın') %}
+        {% set _desc = s.seo_contact_desc or '7/24 acil tesisat hattı: ' + (s.phone or '') + '. ' + (s.district or 'Silivri') + ' ve İstanbul geneline hızlı müdahale garantisi.' %}
+        {% set _keys = s.seo_contact_keys or 'acil tesisatçı, 7/24 tesisat, ' + (s.district or 'silivri') + ' tesisatçı telefon' %}
+    {% else %}
+        {% set _title = s.seo_home_title or (s.title + ' | ' + (s.district or 'Silivri') + '\'de Profesyonel Tesisat Çözümleri') %}
+        {% set _desc = s.seo_home_desc or s.meta_desc or ((s.district or 'Silivri') + ' ve İstanbul genelinde kırmadan su kaçağı tespiti, robotla tıkanıklık açma, petek temizliği. 30dk\'da kapınızdayız.') %}
+        {% set _keys = s.seo_home_keys or s.meta_keys or ('tesisatçı, su kaçağı, kırmadan, ' + (s.district or 'silivri') + ' tesisatçı, acil tesisat') %}
+    {% endif %}
+
+    <title>{{ _title }}</title>
+    <meta name="description" content="{{ _desc }}">
+    <meta name="keywords" content="{{ _keys }}">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="author" content="{{ s.title }}">
+    <meta name="language" content="Turkish">
+
+    {# Yerel SEO - Coğrafi Konum #}
+    {% if s.district or s.city %}
+    <meta name="geo.region" content="TR">
+    <meta name="geo.placename" content="{{ s.district or '' }}{% if s.district and s.city %}, {% endif %}{{ s.city or 'İstanbul' }}">
+    <meta name="ICBM" content="41.07, 28.07">
+    {% endif %}
+
+    {# Canonical URL #}
+    {% if canonical %}
+    <link rel="canonical" href="{{ (s.site_url or 'https://example.com').rstrip('/') }}{{ canonical }}">
+    {% endif %}
+
+    {# Open Graph #}
+    <meta property="og:type" content="{% if page_title %}article{% else %}website{% endif %}">
+    <meta property="og:title" content="{{ _title }}">
+    <meta property="og:description" content="{{ _desc }}">
+    <meta property="og:url" content="{{ (s.site_url or 'https://example.com').rstrip('/') }}{{ canonical or '/' }}">
+    <meta property="og:site_name" content="{{ s.title }}">
+    <meta property="og:locale" content="tr_TR">
+    {% if s.hero_img %}
+    <meta property="og:image" content="{{ (s.site_url or '').rstrip('/') }}/static/uploads/{{ s.hero_img }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    {% endif %}
+
+    {# Twitter Card #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ _title }}">
+    <meta name="twitter:description" content="{{ _desc }}">
+
+    {# Favicon #}
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='uploads/' + s.logo) if s.logo else url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='uploads/' + s.logo) if s.logo else '' }}">
+
+    {# Schema.org LocalBusiness - Yerel arama için kritik #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "{{ s.business_type or 'Plumber' }}",
+      "@id": "{{ (s.site_url or 'https://example.com').rstrip('/') }}/#business",
+      "name": "{{ s.title }}",
+      "url": "{{ s.site_url or 'https://example.com' }}",
+      "telephone": "{{ s.phone }}",
+      "email": "{{ s.email }}",
+      "description": "{{ s.meta_desc or _desc }}",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ s.district or 'Silivri' }}",
+        "addressRegion": "{{ s.city or 'İstanbul' }}",
+        "addressCountry": "TR",
+        "streetAddress": "{{ s.address }}"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "41.07",
+        "longitude": "28.07"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      ],
+      "areaServed": {
+        "@type": "City",
+        "name": "{{ s.city or 'İstanbul' }}"
+      },
+      "sameAs": [
+        "{{ s.facebook or '' }}",
+        "{{ s.instagram or '' }}",
+        "{{ s.linkedin or '' }}"
+      ],
+      "priceRange": "$$",
+      "image": "{{ (s.site_url or '').rstrip('/') }}/static/uploads/{{ s.hero_img or s.logo or '' }}"
+    }
+    </script>
+
+    {# Breadcrumb Schema #}
+    {% if page_title %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "item": {"@id": "{{ (s.site_url or 'https://example.com').rstrip('/') }}/", "name": "Ana Sayfa"}},
+        {"@type": "ListItem", "position": 2, "item": {"@id": "{{ (s.site_url or 'https://example.com').rstrip('/') }}{{ canonical }}", "name": "{{ _title.split('|')[0].strip() }}"}}
+      ]
+    }
+    </script>
+    {% endif %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        main: '{{ s.color_primary if s.color_primary and s.color_primary != "" else "#001d3d" }}',
+                        accent: '{{ s.color_secondary if s.color_secondary and s.color_secondary != "" else "#ffc300" }}',
+                        primary: '{{ s.color_primary if s.color_primary and s.color_primary != "" else "#001d3d" }}',
+                        secondary: '{{ s.color_secondary if s.color_secondary and s.color_secondary != "" else "#ffc300" }}',
+                        warning: '{{ s.color_secondary if s.color_secondary and s.color_secondary != "" else "#ffc300" }}',
+                        success: '#22c55e',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @layer utilities {
+            .fw-black { font-weight: 900; }
+            .italic { font-style: italic; }
+            .tracking-tighter { letter-spacing: -0.05em; }
+            .tracking-widest { letter-spacing: 0.1em; }
+            .hover-scale { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+            .hover-scale:hover { transform: scale(1.05); }
+            .mt-neg-5 { margin-top: -100px; }
+            @media (max-width: 991px) { .mt-neg-5 { margin-top: -50px; } }
+        }
+        /* Bootstrap - Tailwind .collapse Conflict Fix */
+        .collapse:not(.show) { display: none; }
+        .collapsing { height: 0; overflow: hidden; transition: height 0.35s ease; }
+        .collapse.show { display: block !important; visibility: visible !important; }
+        @media (min-width: 992px) {
+            .navbar-collapse.collapse { display: flex !important; visibility: visible !important; }
+        }
+        :root { 
+            --main: {{ s.color_primary if s.color_primary and s.color_primary != '' else '#012c4c' }}; 
+            --accent: {{ s.color_secondary if s.color_secondary and s.color_secondary != '' else '#ffc300' }}; 
+            --light-bg: #f8f9fa; 
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', sans-serif; background: #fff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .top-bar { background: #000814; color: #fff; font-size: 0.85rem; padding: 10px 0; }
+        .navbar { background: var(--main) !important; padding: 15px 0; transition: 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 15px; font-size: 0.8rem; position: relative; transition: 0.3s; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--accent); transition: 0.3s; }
+        .nav-link:hover { color: white !important; }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link.active { color: var(--accent) !important; }
+        
+        .navbar-brand img {
+            height: 110px;
+            width: auto;
+            margin-top: -5px;
+            margin-bottom: -10px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            position: relative;
+        }
+        .navbar-brand:hover img {
+            transform: scale(1.1) rotate(-2deg);
+        }
+        
+        /* Tema Renk Senkronizasyonu */
+        .bg-primary { background-color: var(--main) !important; }
+        .text-primary { color: var(--main) !important; }
+        .btn-primary { background-color: var(--main) !important; border-color: var(--main) !important; color: white !important; }
+        
+        .bg-warning { background-color: var(--accent) !important; }
+        .text-warning { color: var(--accent) !important; }
+        .btn-warning { background-color: var(--accent) !important; border-color: var(--accent) !important; color: #001233 !important; }
+        .border-warning { border-color: var(--accent) !important; }
+
+        .footer-elite { background: #000814; color: white; padding: 100px 0 50px; }
+        
+        /* Floating Contact Widget Styles */
+        .quick-contact-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        .quick-contact-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .quick-contact-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.6);
+            color: white;
+        }
+
+        .quick-contact-menu {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 290px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .quick-contact-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .contact-opt-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .contact-opt-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-opt-btn.wa-opt {
+            background: rgba(37, 211, 102, 0.12);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            color: #25d366;
+        }
+        .contact-opt-btn.wa-opt:hover {
+            background: #25d366;
+            color: white;
+            transform: translateX(-4px);
+        }
+
+        .contact-opt-btn.phone-opt {
+            background: rgba(255, 195, 0, 0.12);
+            border: 1px solid rgba(255, 195, 0, 0.3);
+            color: #ffc300;
+        }
+        .contact-opt-btn.phone-opt:hover {
+            background: #ffc300;
+            color: #001d3d;
+            transform: translateX(-4px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar d-none d-md-block">
+    <div class="container d-flex justify-content-between">
+        <div><i class="fa fa-envelope text-warning me-2"></i> {{ s.email }}</div>
+        <div><i class="fa fa-clock text-warning me-2"></i> 7/24 Acil Müdahale Hattı: <strong>{{ s.phone }}</strong></div>
+    </div>
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-2 text-white d-flex align-items-center gap-2" href="/">
+            {% if s.logo %}
+            <img src="/static/uploads/{{ s.logo }}" alt="{{ s.title }}">
+            {% else %}
+            <i class="fa fa-tools text-warning me-2"></i>{{ s.title }}
+            {% endif %}
+        </a>
+        <button class="navbar-toggler border-0 text-white" data-bs-toggle="collapse" data-bs-target="#n"><i class="fa fa-bars"></i></button>
+        <div class="collapse navbar-collapse" id="n">
+            <ul class="navbar-nav ms-auto py-3 py-lg-0">
+                <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/' }}" href="/">Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/hakkimizda' }}" href="/hakkimizda">Hakkımızda</a></li>
+                <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/hizmetler' }}" href="/hizmetler">Hizmetler</a></li>
+                <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/galeri' }}" href="/galeri">Galeri</a></li>
+                <li class="nav-item"><a class="nav-link {{ 'active' if request.path == '/iletisim' }}" href="/iletisim">İletişim</a></li>
+            </ul>
+            <a href="/iletisim" class="btn btn-warning rounded-pill px-5 py-2.5 ms-lg-4 fw-black italic tracking-tighter shadow-[0_10px_20px_rgba(255,195,0,0.3)] hover:-translate-y-1 transition-all d-none d-lg-inline-block">
+                ÜCRETSİZ TEKLİF AL
+            </a>
+        </div>
+    </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer class="footer-elite">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <h2 class="fw-bold text-warning mb-4">{{ s.title }}</h2>
+                <p class="text-secondary mb-4">{{ s.footer_text or "Silivri ve çevresinde kırmadan, termal kamera ve dinleme cihazlarıyla %100 noktasal su kaçağı tespiti yapıyoruz." }}</p>
+                <div class="d-flex gap-3">
+                    {% if s.facebook %}<a href="{{ s.facebook }}" class="btn btn-outline-light btn-sm rounded-circle"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                    {% if s.instagram %}<a href="{{ s.instagram }}" class="btn btn-outline-light btn-sm rounded-circle"><i class="fab fa-instagram"></i></a>{% endif %}
+                    {% if s.linkedin %}<a href="{{ s.linkedin }}" class="btn btn-outline-light btn-sm rounded-circle"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <h5 class="fw-bold mb-4">Hizmetler</h5>
+                <ul class="list-unstyled text-secondary small">
+                    {% for fs in footer_services %}
+                    <li class="mb-2"><a href="/hizmetler" class="text-secondary text-decoration-none hover-warning">{{ fs.name }}</a></li>
+                    {% endfor %}
+                    {% if not footer_services %}
+                    <li class="mb-2">Kırmadan Su Kaçağı Tespiti</li>
+                    <li class="mb-2">Robot İle Tıkanıklık Açma</li>
+                    <li class="mb-2">Makina İle Gider Temizliği</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h5 class="fw-bold mb-4">Bize Ulaşın</h5>
+                <p class="text-secondary small"><i class="fa fa-map-marker-alt text-warning me-2"></i> {{ s.address }}</p>
+                <p class="text-secondary small"><i class="fa fa-phone text-warning me-2"></i> {{ s.phone }}</p>
+            </div>
+            <div class="col-lg-3 text-center">
+                <h5 class="fw-bold mb-4">Sertifikalarımız</h5>
+                <div class="row g-2 opacity-50">
+                    <div class="col-4"><i class="fa fa-award fa-3x"></i></div>
+                    <div class="col-4"><i class="fa fa-shield-virus fa-3x"></i></div>
+                    <div class="col-4"><i class="fa fa-certificate fa-3x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Yüzen İletişim Butonu ve Açılır Menü -->
+<div class="quick-contact-wrapper">
+    <!-- Popover İletişim Seçenekleri -->
+    <div class="quick-contact-menu" id="quickContactMenu">
+        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-b border-white/10">
+            <span class="text-xs font-black tracking-widest text-white/70 uppercase">7/24 İLETİŞİM HATLARI</span>
+            <button type="button" class="btn-close btn-close-white text-xs" id="closeQuickContact" aria-label="Kapat"></button>
+        </div>
+        
+        <!-- WhatsApp İle Mesaj Gönder -->
+        <a href="https://wa.me/{{ s.whatsapp }}" target="_blank" class="contact-opt-btn wa-opt">
+            <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-xl">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <div>
+                <span class="d-block fw-black text-sm tracking-tight">WhatsApp İle Yazın</span>
+                <small class="opacity-75 text-[11px] font-semibold">Anında mesaj gönderin</small>
+            </div>
+        </a>
+
+        <!-- Telefon İle Arama -->
+        <a href="tel:{{ s.phone }}" class="contact-opt-btn phone-opt">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-xl">
+                <i class="fa fa-phone"></i>
+            </div>
+            <div>
+                <span class="d-block fw-black text-sm tracking-tight">Telefon İle Arayın</span>
+                <small class="opacity-75 text-[11px] font-semibold">{{ s.phone or '7/24 Acil Müdahale' }}</small>
+            </div>
+        </a>
+    </div>
+
+    <!-- Tetikleyici Yüzen Buton -->
+    <button class="quick-contact-btn animate__animated animate__bounceInUp" id="toggleQuickContact" aria-label="İletişim Seçenekleri">
+        <i class="fab fa-whatsapp" id="contactBtnIcon"></i>
+    </button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toggleBtn = document.getElementById('toggleQuickContact');
+        var menu = document.getElementById('quickContactMenu');
+        var closeBtn = document.getElementById('closeQuickContact');
+        var icon = document.getElementById('contactBtnIcon');
+
+        if (toggleBtn && menu) {
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = menu.classList.contains('show');
+                if (isOpen) {
+                    menu.classList.remove('show');
+                    icon.className = 'fab fa-whatsapp';
+                } else {
+                    menu.classList.add('show');
+                    icon.className = 'fa fa-times';
+                }
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menu.classList.remove('show');
+                    icon.className = 'fab fa-whatsapp';
+                });
+            }
+
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    menu.classList.remove('show');
+                    icon.className = 'fab fa-whatsapp';
+                }
+            });
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

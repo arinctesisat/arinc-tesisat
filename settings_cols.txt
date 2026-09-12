@@ -1,0 +1,4 @@
+(0, 'id', 'INTEGER', 0, None, 1)
+(1, 'phone', 'TEXT', 0, None, 0)
+(2, 'email', 'TEXT', 0, None, 0)
+(3, 'about_text', 'TEXT', 0, None, 0)

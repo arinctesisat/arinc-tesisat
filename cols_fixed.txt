@@ -1,0 +1,4 @@
+(0, 'id', 'INTEGER', 0, None, 1)
+(1, 'title', 'TEXT', 0, None, 0)
+(2, 'description', 'TEXT', 0, None, 0)
+(3, 'icon', 'TEXT', 0, None, 0)

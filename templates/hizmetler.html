@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .services-luxury-hero {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        background: #000;
+        position: relative;
+        overflow: hidden;
+    }
+    .services-luxury-hero .hero-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.35;
+    }
+
+    .service-nav-premium {
+        position: sticky;
+        top: 100px;
+        z-index: 10;
+    }
+
+    .service-btn-luxury {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0,0,0,0.05);
+        padding: 25px;
+        border-radius: 30px;
+        margin-bottom: 15px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left;
+        color: #1e293b;
+    }
+
+    .service-btn-luxury:hover {
+        background: white;
+        transform: translateX(10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    }
+
+    .service-btn-luxury.active {
+        background: var(--main);
+        color: white;
+        box-shadow: 0 25px 50px rgba(0,29,61,0.2);
+    }
+
+    .service-icon-box {
+        width: 50px; height: 50px;
+        border-radius: 18px;
+        background: white;
+        display: flex; align-items: center; justify-content: center;
+        transition: 0.4s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .active .service-icon-box { background: var(--accent); color: var(--main); }
+
+    .service-detail-card {
+        background: white;
+        border-radius: 50px;
+        padding: 60px;
+        box-shadow: 0 50px 100px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .tech-tag {
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        border-radius: 12px;
+        letter-spacing: 1px;
+    }
+
+    .service-description-container {
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    .service-desc-item {
+        font-size: 1.125rem;
+        line-height: 2;
+        color: #334155;
+        margin-bottom: 24px;
+        letter-spacing: 0.25px;
+    }
+
+    .service-desc-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .service-desc-title {
+        color: #0f172a;
+        font-weight: 800;
+        display: inline;
+        margin-right: 4px;
+    }
+</style>
+
+{% set hero_img = url_for('static', filename='uploads/' + s.services_hero_img) if s.services_hero_img else 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1920' %}
+<section class="services-luxury-hero">
+    <div class="hero-bg animate__animated animate__fadeIn" style="background-image: url('{{ hero_img }}');"></div>
+    <div class="container py-5 text-white position-relative z-index-1">
+        <div class="row">
+            <div class="col-lg-8 animate__animated animate__fadeInLeft">
+                <span class="badge bg-warning text-dark px-4 py-2 rounded-pill fw-black mb-4 tracking-widest uppercase">SİLİVRİ VE ÇEVRE İLÇELERDE TEKNOLOJİK EKİPMAN VE PROFESYONEL EKİP</span>
+                <h1 class="display-1 fw-black italic tracking-tighter mb-4">{{ s.services_title or 'Hizmetlerimiz' }}</h1>
+                <p class="fs-4 opacity-75 mb-0 leading-relaxed">{{ s.services_hero_text or 'EN AZ MASRAF VE MALİYET İÇİN ARINÇ TESİSAT' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light/50" style="background: #fafbfc;">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <div class="service-nav-premium">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                        {% for srv in services %}
+                        <button class="service-btn-luxury hover-scale {% if loop.first %}active{% endif %}" data-bs-toggle="pill" data-bs-target="#srv-{{ srv.id }}" type="button">
+                            <div class="service-icon-box">
+                                <i class="fa {{ srv.icon or 'fa-tools' }} fa-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <span class="d-block fw-black italic tracking-tighter text-lg">{{ srv.name }}</span>
+                                <span class="d-block opacity-50 font-bold" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Detayları Görüntüle</span>
+                            </div>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="tab-content" id="v-pills-tabContent">
+                    {% for srv in services %}
+                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="srv-{{ srv.id }}" role="tabpanel">
+                        <div class="service-detail-card animate__animated animate__fadeInUp">
+                            <div class="row g-5">
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center gap-4 mb-4">
+                                        <div class="w-16 h-16 bg-primary/5 rounded-2xl flex items-center justify-center text-primary">
+                                            <i class="fa {{ srv.icon or 'fa-tools' }} fa-2x"></i>
+                                        </div>
+                                        <h2 class="display-4 fw-black italic tracking-tighter mb-0 text-primary">{{ srv.name}}</h2>
+                                    </div>
+                                    <div class="service-description-container">
+                                        {% for paragraph in srv.desc.split('\n') %}
+                                            {% set text = paragraph.strip() %}
+                                            {% if text %}
+                                                {% if ':' in text and not text.startswith('http') %}
+                                                    {% set parts = text.split(':', 1) %}
+                                                    <p class="service-desc-item">
+                                                        <strong class="service-desc-title">{{ parts[0] }}:</strong>{{ parts[1] }}
+                                                    </p>
+                                                {% else %}
+                                                    <p class="service-desc-item">
+                                                        {{ text }}
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    
+                                          
+                                    {% if srv.video %}
+                                    <div class="rounded-[40px] overflow-hidden shadow-2xl position-relative group mb-5 bg-black">
+                                        <div class="ratio ratio-16x9">
+                                            <video controls class="w-full h-full" poster="{% if srv.img %}{{ url_for('static', filename='uploads/' + srv.img) }}{% else %}https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200{% endif %}">
+                                                <source src="{{ url_for('static', filename='uploads/' + srv.video) }}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if srv.img and not srv.video %}
+                                    <div class="rounded-[40px] overflow-hidden shadow-2xl position-relative group mb-5">
+                                        <img src="{{ url_for('static', filename='uploads/' + srv.img) }}" class="w-full transition-transform duration-700 group-hover:scale-110" alt="{{ srv.name }}">
+                                    </div>
+                                    {% endif %}
+
+                                    <a href="https://wa.me/{{ s.whatsapp }}" class="btn btn-warning btn-lg w-100 py-4 rounded-pill fw-black tracking-widest uppercase shadow-xl hover-scale">WHATSAPP İLE RANDEVU AL</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if not services %}
+                <div class="text-center py-5 opacity-20">
+                    <i class="fa fa-tools fa-6x mb-4"></i>
+                    <p class="fw-black uppercase tracking-widest">Henüz hizmet eklenmemiş</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .gallery-luxury-hero {
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        background: #000;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gallery-luxury-hero .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
+    }
+
+    .gallery-tabs-premium {
+        background: white;
+        padding: 10px;
+        border-radius: 100px;
+        display: inline-flex;
+        gap: 5px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .gallery-tabs-premium .nav-link {
+        border-radius: 100px;
+        padding: 15px 35px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 11px;
+        color: #001d3d !important;
+        border: none;
+        transition: 0.4s;
+    }
+
+    .gallery-tabs-premium .nav-link.active {
+        background: #001d3d !important;
+        color: #ffc300 !important;
+        box-shadow: 0 10px 20px rgba(0,29,61,0.2);
+    }
+
+    .gallery-item-premium {
+        border-radius: 35px;
+        overflow: hidden;
+        position: relative;
+        aspect-ratio: 1/1;
+        cursor: pointer;
+        background: #000;
+    }
+
+    .gallery-item-premium img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gallery-item-premium:hover img {
+        transform: scale(1.15) rotate(2deg);
+        opacity: 0.6;
+    }
+
+    .gallery-overlay-premium {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 40px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: white;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.4s;
+    }
+
+    .gallery-item-premium:hover .gallery-overlay-premium {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .video-card-premium {
+        background: white;
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.02);
+        transition: 0.4s;
+    }
+
+    .video-card-premium:hover {
+        transform: translateY(-10px);
+    }
+</style>
+
+<section class="gallery-luxury-hero">
+    <div class="hero-bg animate__animated animate__fadeIn"
+        style="background-image: url('{% if s.gallery_hero_img %}{{ url_for('static', filename='uploads/' + s.gallery_hero_img) }}{% else %}https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1920{% endif %}');">
+    </div>
+    <div class="container py-5 text-white position-relative z-index-1">
+        <div class="row text-center">
+            <div class="col-12 animate__animated animate__fadeInDown">
+                <span
+                    class="badge bg-warning text-dark px-4 py-2 rounded-pill fw-black mb-4 tracking-widest uppercase">MEDYA
+                    MERKEZİ</span>
+                <h1 class="display-1 fw-black italic tracking-tighter mb-4">{{ s.gallery_title or 'Çalışma Galerimiz' }}
+                </h1>
+                <p class="fs-4 opacity-75 mx-auto leading-relaxed" style="max-width: 700px;">{{ s.gallery_hero_text or
+                    'Tüm operasyonlarımızı ve teknik süreçlerimizi şeffaf bir şekilde inceleyebilirsiniz.' }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="text-center mb-5 animate__animated animate__fadeIn">
+        <ul class="nav nav-pills gallery-tabs-premium" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#fotos"
+                    type="button">FOTOĞRAFLAR</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#vids" type="button">VİDEO
+                    ÇALIŞMALARI</button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="fotos">
+            <div class="row g-4 animate__animated animate__fadeInUp">
+                {% for i in gallery %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="gallery-item-premium shadow-2xl group">
+                        <img src="{{ url_for('static', filename='uploads/' + i.img) }}"
+                            alt="{{ i.title or 'Galeri Görseli' }}">
+                        <div class="gallery-overlay-premium">
+                            <span class="text-warning fw-black tracking-widest uppercase mb-2 d-block"
+                                style="font-size: 10px;">{{ i.title or 'OPERASYON' }}</span>
+                            <h4 class="fw-black italic tracking-tighter mb-2">{{ i.title or 'Saha Çalışması' }}</h4>
+                            <p class="small opacity-75 mb-0">{{ i.desc or 'Modern cihazlarla teknik müdahale görüntüsü.'
+                                }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if not gallery %}
+            <div class="text-center py-5 opacity-20">
+                <i class="fa fa-camera fa-6x mb-4"></i>
+                <p class="fw-black uppercase tracking-widest">Görsel bulunmuyor</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="tab-pane fade" id="vids">
+            <div class="row g-5">
+                {% for v in videos %}
+                <div class="col-md-6">
+                    <div class="video-card-premium group">
+                        <div class="ratio ratio-16x9">
+                            <video controls class="w-100"
+       poster="{{ url_for('static', filename='uploads/yiltek-poster.jpg') }}">
+    <source src="{{ url_for('static', filename='uploads/' + v.vid_path) }}"
+            type="video/mp4">
+</video>
+                        </div>
+                        <div class="p-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="fw-black italic tracking-tighter mb-0">{{ v.title }}</h4>
+                                <i class="fa fa-play-circle fa-2x text-warning"></i>
+                            </div>
+                            <p class="text-muted italic mb-0">{{ v.desc or 'Video detay açıklaması.' }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if not videos %}
+                <div class="col-12 text-center py-5 opacity-20">
+                    <i class="fa fa-video fa-6x mb-4"></i>
+                    <p class="fw-black uppercase tracking-widest">Video bulunmuyor</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

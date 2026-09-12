@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% set hero_bg = url_for('static', filename='uploads/' + s.hero_img) if s.hero_img else 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1920' %}
+<!-- Hero Section: Ultra Premium -->
+<header class="position-relative overflow-hidden text-white d-flex align-items-center" style="min-height: 95vh; background: #000;">
+    <div class="position-absolute w-100 h-100 animate__animated animate__fadeIn" 
+         style="background-image: url('{{ hero_bg }}'); background-size: cover; background-position: center;"></div>
+    <div class="position-absolute w-100 h-100 bg-gradient-to-br from-main/90 via-main/40 to-transparent"></div>
+    
+    <!-- Dekoratif Elementler -->
+    <div class="position-absolute bottom-0 start-0 w-100 h-32 bg-gradient-to-t from-black to-transparent opacity-50"></div>
+    
+    <div class="container position-relative z-index-1 py-12">
+        <div class="row align-items-center g-5">
+            <!-- Sol Kısım: Hero Başlık ve Butonlar -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <span class="inline-block px-5 py-2 bg-accent text-main text-[10px] font-black tracking-[0.3em] rounded-full mb-6 animate__animated animate__fadeInDown uppercase">
+                    {{ s.h_badge or 'İSTANBUL\'UN EN GÜVENİLİR TEKNİK SERVİSİ' }}
+                </span>
+                <h1 class="display-1 fw-black mb-6 animate__animated animate__fadeInLeft italic tracking-tighter leading-[0.9]">
+                    {{ s.hero_title or 'Tesisat Sorunlarına' }} <br>
+                    <span class="text-accent"></span> 
+                </h1>
+                <p class="fs-4 mb-8 animate__animated animate__fadeInLeft animate__delay-1s opacity-75 max-w-2xl leading-relaxed">
+                    {{ s.hero_subtitle or 'Kırmadan su kaçağı tespiti, robotla tıkanıklık açma ve profesyonel onarım hizmetleri. 30 dakikada kapınızdayız.' }}
+                </p>
+                <div class="d-flex gap-4 justify-content-center justify-content-lg-start animate__animated animate__fadeInUp animate__delay-1s">
+                    <a href="tel:{{ s.phone }}" class="btn btn-warning btn-lg px-8 py-4 rounded-full fw-black tracking-widest text-sm shadow-2xl hover-scale">
+                        <i class="fa fa-phone me-2"></i> {{ s.h_btn1 or 'ŞİMDİ ARA' }}
+                    </a>
+                    <a href="#hizmetler" class="btn btn-outline-light btn-lg px-8 py-4 rounded-full fw-black tracking-widest text-sm hover-scale">
+                        {{ s.h_btn2 or 'HİZMETLERİMİZ' }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sağ Kısım: Kayar Hizmetler Slider Card -->
+            <div class="col-lg-6 animate__animated animate__fadeInRight animate__delay-1s">
+                <div class="hero-services-carousel-card position-relative p-4 p-md-5 rounded-[40px] bg-slate-900/70 backdrop-blur-2xl border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.6)]">
+                    
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-b border-white/10">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-accent animate-pulse"></span>
+                            <span class="text-xs font-black tracking-[0.2em] text-accent uppercase">ÖNE ÇIKAN HİZMETLER</span>
+                        </div>
+                        <span class="text-[11px] font-bold text-white/50 tracking-wider">7/24 CANLI DESTEK</span>
+                    </div>
+
+                    <div id="heroServicesCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3500">
+                        <div class="carousel-inner">
+                            {% set slider_services = services if services else [
+                                {'name': 'Kırmadan Su Kaçağı Tespiti', 'desc': 'Termal kamera ve akustik dinleme cihazları ile sızıntıları kırmadan noktasal tespit ediyoruz.', 'icon': 'fa-wrench', 'img': ''},
+                                {'name': 'Robotla Tıkanıklık Açma', 'desc': 'Tıkalı pimaş ve gider borularını kırma-dökme yapmadan robot makinelerle açıyoruz.', 'icon': 'fa-tools', 'img': ''},
+                                {'name': 'Petek Temizliği', 'desc': 'Özel ilaçlı makinelerle tesisat temizliği yapıp ısı verimini %30 artırıyoruz.', 'icon': 'fa-fire', 'img': ''},
+                                {'name': 'Yıkama İle Gider Temizliği', 'desc': 'Yüksek basınçlı su jetleriyle boru içlerindeki tüm birikintileri temizliyoruz.', 'icon': 'fa-sink', 'img': ''}
+                            ] %}
+
+                            {% for srv in slider_services %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <div class="service-slide-item">
+                                    <div class="position-relative rounded-[28px] overflow-hidden mb-4 shadow-2xl" style="height: 220px;">
+                                        <img src="{% if srv.img %}{{ url_for('static', filename='uploads/' + srv.img) }}{% else %}https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800{% endif %}" 
+                                             class="w-100 h-100 object-cover transform hover:scale-110 transition-transform duration-700" alt="{{ srv.name }}">
+                                        <div class="position-absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                                        
+                                        <div class="position-absolute top-4 start-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl w-12 h-12 flex items-center justify-center text-accent shadow-lg">
+                                            <i class="fa {{ srv.icon or 'fa-tools' }} fa-lg"></i>
+                                        </div>
+
+                                        <div class="position-absolute bottom-4 start-4 end-4">
+                                            <h3 class="h3 fw-black italic tracking-tighter text-white mb-0 drop-shadow-md">
+                                                {{ srv.name }}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-white/80 text-sm leading-relaxed mb-4 line-clamp-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 42px;">
+                                        {{ srv.desc }}
+                                    </p>
+
+                                    <div class="d-flex align-items-center justify-content-between pt-3 border-t border-white/10">
+                                        <a href="/hizmetler" class="btn btn-warning rounded-full px-6 py-2.5 fw-black text-xs uppercase tracking-widest shadow-xl hover-scale">
+                                            HİZMETİ İNCELE <i class="fa fa-arrow-right ms-1"></i>
+                                        </a>
+                                        <a href="https://wa.me/{{ s.whatsapp }}" class="text-warning text-xs font-black uppercase tracking-wider text-decoration-none hover-scale d-flex align-items-center gap-1.5">
+                                            <i class="fab fa-whatsapp fa-lg"></i> RANDEVU AL
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button class="btn btn-outline-light btn-sm rounded-circle w-10 h-10 d-flex items-center justify-center opacity-75 hover:opacity-100 border-white/20" type="button" data-bs-target="#heroServicesCarousel" data-bs-slide="prev">
+                                <i class="fa fa-chevron-left text-xs"></i>
+                            </button>
+                            <button class="btn btn-outline-light btn-sm rounded-circle w-10 h-10 d-flex items-center justify-center opacity-75 hover:opacity-100 border-white/20" type="button" data-bs-target="#heroServicesCarousel" data-bs-slide="next">
+                                <i class="fa fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var carouselEl = document.getElementById('heroServicesCarousel');
+            if (carouselEl && typeof bootstrap !== 'undefined') {
+                new bootstrap.Carousel(carouselEl, {
+                    interval: 3500,
+                    ride: 'carousel',
+                    touch: true
+                });
+            }
+        });
+    </script>
+</header>
+
+<!-- Stats Grid -->
+<div class="container mt-neg-5 position-relative" style="z-index: 10;">
+    <div class="row g-4">
+        {% set stats_data = [
+            {'icon': 'fa-home-user', 'val': s.stat1_value, 'title': s.stat1_title, 'color': 'primary'},
+            {'icon': 'fa-user-gear', 'val': s.stat2_value, 'title': s.stat2_title, 'color': 'warning'},
+            {'icon': 'fa-location-dot', 'val': s.stat3_value, 'title': s.stat3_title, 'color': 'success'},
+            {'icon': 'fa-stopwatch', 'val': s.stat4_value, 'title': s.stat4_title, 'color': 'danger'}
+        ] %}
+        {% for stat in stats_data %}
+        <div class="col-md-3">
+            <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-light text-center group hover:bg-slate-50 transition-all duration-500 hover-scale">
+                <div class="w-16 h-16 bg-{{ stat.color }}/5 rounded-2xl mx-auto mb-4 flex items-center justify-center text-{{ stat.color }}">
+                    <i class="fa {{ stat.icon }} fa-2xl"></i>
+                </div>
+                <h2 class="fw-black italic tracking-tighter mb-0 h1">{{ stat.val or '0' }}</h2>
+                <p class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase">{{ stat.title or 'VERİ' }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Services Grid -->
+<section id="hizmetler" class="py-24">
+    <div class="container">
+        <div class="text-center mb-16">
+            <span class="text-primary fw-black tracking-[0.3em] uppercase text-xs animate__animated animate__fadeIn">{{ s.s_subtitle or 'Neler Sunuyoruz?' }}</span>
+            <h2 class="display-3 fw-black italic tracking-tighter mt-3">{{ s.s_title or 'Profesyonel Servislerimiz' }}</h2>
+            <div class="w-20 h-2 bg-accent mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div class="row g-5">
+            {% for srv in services %}
+            <div class="col-md-6 col-lg-3">
+                <div class="bg-white p-8 rounded-[50px] shadow-xl border border-light h-100 transition-all duration-500 hover:shadow-2xl group hover-scale">
+                    <div class="mb-8 rounded-[30px] overflow-hidden aspect-square">
+                        <img src="{% if srv.img %}{{ url_for('static', filename='uploads/' + srv.img) }}{% else %}https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=600{% endif %}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ srv.name }}">
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary">
+                            <i class="fa {{ srv.icon or 'fa-tools' }}"></i>
+                        </div>
+                        <h4 class="fw-black italic tracking-tighter mb-0">{{ srv.name }}</h4>
+                    </div>
+                    <p class="text-slate-500 text-sm italic mb-6 leading-relaxed">{{ srv.desc | truncate(100) }}</p>
+                    <a href="/hizmetler" class="text-[10px] font-black tracking-widest uppercase text-primary no-underline flex items-center gap-2 group-hover:translate-x-2 transition-transform">
+                        İncele <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not services %}
+            <div class="col-12 text-center py-20 opacity-20">
+                <i class="fa fa-tools fa-5x"></i>
+                <p class="fw-black tracking-widest uppercase mt-4">Henüz hizmet eklenmedi</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-20 bg-primary relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+    <div class="container relative z-10">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-8 animate__animated animate__fadeInLeft">
+                <h2 class="display-4 fw-black text-white italic tracking-tighter mb-4">{{ s.cta_title or 'Evinizde veya İş Yerinizde Su Kaçağı mı Var?' }}</h2>
+                <p class="fs-4 text-white/70 italic">{{ s.cta_subtitle or 'Silivri ve çevresinde kırmadan, termal kamera ve dinleme cihazlarıyla %100 noktasal su kaçağı tespiti yapıyoruz.' }}</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="https://wa.me/{{ s.whatsapp }}" class="btn btn-warning btn-lg px-10 py-5 rounded-full fw-black tracking-widest uppercase shadow-2xl hover-scale">
+                    {{ s.cta_btn or 'WHATSAPP DESTEK' }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-24 bg-slate-50">
+    <div class="container">
+        <div class="text-center mb-16">
+            <h2 class="display-3 fw-black italic tracking-tighter">{{ s.t_title or 'Gerçek Müşteri Deneyimleri' }}</h2>
+            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs mt-4">Mutlu müşterilerimizden bazıları</p>
+        </div>
+        
+        <div class="row g-5">
+            {% for t in testimonials %}
+            <div class="col-md-4">
+                <div class="bg-white p-10 rounded-[50px] shadow-2xl border border-white h-100 flex flex-column">
+                    <div class="text-warning mb-6 flex gap-1">
+                        {% for i in range(t.stars) %}<i class="fa fa-star"></i>{% endfor %}
+                    </div>
+                    <p class="fs-5 text-slate-700 italic leading-relaxed mb-8 flex-grow">"{{ t.content }}"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center font-black text-primary">
+                            {{ t.name[0] }}
+                        </div>
+                        <h6 class="fw-black italic tracking-tighter mb-0">{{ t.name }}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not testimonials %}
+            <!-- Statik Örnekler (Eğer veri yoksa) -->
+            <div class="col-md-4">
+                <div class="bg-white p-10 rounded-[50px] shadow-2xl border border-white h-100">
+                    <div class="text-warning mb-6 flex gap-1"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+                    <p class="fs-5 text-slate-700 italic leading-relaxed mb-8">""Diğer çağırdığımız ustalar orayı, burayı kırmız gerekebilir derken, Arınç Tesisat teknolojik cihazlarla gelip kaçağı noktasal olarak tespit ettiler. Kırmadan dökmeden tek bir fayans çıkarark kaçağı tamir ettiler. Silivri'de su kaçağı olan herkese gözüm kapalı tavsiye ederim."</p>
+                    <h6 class="fw-black italic tracking-tighter">- Kerim Baş</h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-10 rounded-[50px] shadow-2xl border border-white h-100">
+                    <div class="text-warning mb-6 flex gap-1"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+                    <p class="fs-5 text-slate-700 italic leading-relaxed mb-8">"Su faturam birden yüksek gelmeye başlayınca kaçak olabileceğinden şüphelendim ve arınç tesisatı çağırdım. Termal kamera ile gelip duvar arkasındaki sıcak su borusundaki çatlağı dakikalar içinde tespit ettiler. Kırmadan tamiratını yaptıkları için ve temiz profesyonel hizmetleri için teşekkür ederim"</p>
+                    <h6 class="fw-black italic tracking-tighter">-Asaf Budak</h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-10 rounded-[50px] shadow-2xl border border-white h-100">
+                    <div class="text-warning mb-6 flex gap-1"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+                    <p class="fs-5 text-slate-700 italic leading-relaxed mb-8">"Mutfak giderimiz tamamen tıkanmıştı ve su geri tepmeye başlamıştı.Kimyasal açıcılar döküp borulara zarar vermek yerine direkt uzman desteği aldık. Saat geç gece olmasına rağmen hemen geldiler. Robot makinaları ile tıkanıklığı açtılar ve kanal görüntüleme cihazıyla gideri içini gösterip sorun olmadığını gösterdiler.Kendilerine teşekkür eder ve öneririm"</p>
+                    <h6 class="fw-black italic tracking-tighter">- Baran Demirtaş</h6>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Accordion -->
+<section class="py-24 bg-white">
+    <div class="container">
+        <div class="text-center mb-16">
+            <h2 class="display-3 fw-black italic tracking-tighter">{{ s.f_title or 'Merak Edilenler' }}</h2>
+            <div class="w-16 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush space-y-4" id="faq">
+                    {% for f in faqs %}
+                    <div class="accordion-item border-2 border-slate-50 rounded-[30px] overflow-hidden shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %} py-5 px-8 fw-black italic tracking-tighter text-lg" data-bs-toggle="collapse" data-bs-target="#f{{ f.id }}">
+                                {{ f.question }}
+                            </button>
+                        </h2>
+                        <div id="f{{ f.id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#faq">
+                            <div class="accordion-body px-8 pb-8 text-slate-500 italic leading-relaxed">{{ f.answer }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popup Promo -->
+{% if s.popup_active and s.popup_img %}
+<div class="modal fade" id="specialPopup" tabindex="-1" aria-labelledby="promoLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0">
+            <span id="promoLabel" class="visually-hidden">Promosyon Kampanyası</span>
+            <div class="modal-body p-0 position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-6 z-3" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                <a href="{{ s.popup_link or '#' }}">
+                    <img src="{% if s.popup_img and 'Ekran_goruntusu' not in s.popup_img %}/static/uploads/{{ s.popup_img }}{% else %}https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?q=80&w=800{% endif %}" class="img-fluid rounded-[50px] shadow-[0_50px_100px_rgba(0,0,0,0.5)] transition hover-scale border-4 border-white/10" alt="Kampanya">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var modalEl = document.getElementById('specialPopup');
+        if (modalEl) {
+            var myModal = new bootstrap.Modal(modalEl, {
+                backdrop: true,
+                keyboard: true,
+                focus: true
+            });
+            
+            // Ekranda herhangi bir yere tıklandığında modalı kapat
+            modalEl.addEventListener('click', function() {
+                myModal.hide();
+            });
+
+            // Focus management before hide
+            modalEl.addEventListener('hide.bs.modal', function () {
+                if (document.activeElement && modalEl.contains(document.activeElement)) {
+                    document.activeElement.blur();
+                }
+            });
+            modalEl.addEventListener('hidden.bs.modal', function () {
+                 // Move focus to a safe target
+                document.body.focus();
+            });
+            setTimeout(function() {
+                myModal.show();
+            }, 600);
+        }
+    });
+</script>
+{% endif %}
+
+{% endblock %}

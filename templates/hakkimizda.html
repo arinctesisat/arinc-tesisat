@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .about-luxury-hero {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+    }
+    .about-luxury-hero .hero-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
+        filter: saturate(0.5);
+    }
+    .about-luxury-hero .container { position: relative; z-index: 2; }
+    
+    
+    .stats-card-premium {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 40px;
+        padding: 40px;
+        transition: 0.4s;
+    }
+    .stats-card-premium:hover {
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateY(-10px);
+        border-color: var(--accent);
+    }
+
+    .image-mask-custom {
+        clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        border-radius: 20px;
+    }
+    
+    .timeline-luxury {
+        position: relative;
+        padding-left: 50px;
+    }
+    .timeline-luxury::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; width: 2px; height: 100%;
+        background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+    .timeline-point {
+        position: absolute;
+        left: -6px; top: 0; width: 14px; height: 14px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 15px var(--accent);
+    }
+</style>
+
+<section class="about-luxury-hero">
+    <div class="hero-bg animate__animated animate__fadeIn" style="background-image: url('{% if s.about_hero_img %}{{ url_for('static', filename='uploads/' + s.about_hero_img) }}{% else %}https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1920{% endif %}');"></div>
+    <div class="container py-5 text-white">
+        <div class="row align-items-center">
+            <div class="col-lg-7 animate__animated animate__fadeInLeft">
+                <span class="badge bg-warning text-dark px-4 py-2 rounded-pill fw-black mb-4 tracking-widest uppercase">KURUMSAL KİMLİK</span>
+                <h1 class="display-1 fw-black italic tracking-tighter mb-4">{{ s.about_title or 'Hakkımızda' }}</h1>
+                <p class="fs-4 opacity-75 leading-relaxed">{{ s.about_subtitle or 'Deneyim, Teknoloji ve Güvenin Buluştuğu Nokta' }}</p>
+                <div class="mt-5 d-flex gap-4">
+                    <div class="stats-mini">
+                        <h4 class="fw-black text-warning mb-0 h2">{{ s.stat1_value }}</h4>
+                        <small class="text-uppercase tracking-widest opacity-50 font-bold" style="font-size: 10px;">{{ s.stat1_title }}</small>
+                    </div>
+                    <div class="vr opacity-25"></div>
+                    <div class="stats-mini">
+                        <h4 class="fw-black text-warning mb-0 h2">{{ s.stat2_value }}</h4>
+                        <small class="text-uppercase tracking-widest opacity-50 font-bold" style="font-size: 10px;">{{ s.stat2_title }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white overflow-hidden">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 position-relative animate__animated animate__fadeInLeft">
+                <div class="bg-primary position-absolute w-75 h-100 top-0 start-0 opacity-5 rounded-5" style="transform: rotate(-5deg);"></div>
+                <img src="{% if s.about_img %}{{ url_for('static', filename='uploads/' + s.about_img) }}{% else %}https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=70&w=400{% endif %}" class="img-fluid rounded-5 shadow-2xl position-relative z-index-1" alt="{{ s.title }}">
+            </div>
+            <div class="col-lg-6 animate__animated animate__fadeInRight">
+                <div class="ps-lg-5">
+                    <h6 class="text-primary fw-black text-uppercase tracking-widest mb-3 italic">— HİKAYEMİZ</h6>
+                    <h2 class="display-3 fw-black mb-4 italic tracking-tighter"><br><span class="text-primary"></span>   ARINÇ TESİSAT </h2>
+                    <p class="text-muted fs-5 leading-relaxed mb-4">
+                      
+                      ARINÇ TESİSAT; Silivri ve çevresinde uzun yıllara dayanan tecrübesiyle su kaçağı tespiti, kırmadan tesisat tamiri ve tıkanıklık açma alanlarında profesyonel çözümler sunan yetkili ve uzman bir tesisat firmasıdır.
+
+                      Kurulduğumuz ilk günden itibaren amacımız; ev ve iş yerlerinizde meydana gelen su tesisatı sorunlarını kırma-dökme yapmadan, teknolojik ekipmanlar ve noktasal tespit yöntemleriyle en hızlı şekilde çözüme kavuşturmaktır.
+
+                    </p>
+                    <p class="text-muted fs-5 leading-relaxed mb-4">
+                        <H1>Neden Silivri'de Bizi Tercih Etmelisiniz?</H1>
+                        <BR>
+                        Geleneksel yöntemlerle yapılan tesisat tamirleri, kırma dökme maliyetleri nedeniyle yaşam alanlarınıza zarar verir ve yüksek masraflara yol açar. ARINÇ TESİSAT olarak, en son teknoloji termal kamera ve akustik dinleme cihazları ile su kaçaklarını duvar veya fayanslarınıza zarar vermeden %100 noktasal olarak tespit ediyoruz.
+                         
+                        
+                         
+                    </p>
+                    
+                    <div class="row g-4 pt-4 border-top border-light">
+                        <div class="col-md-6 d-flex align-items-center gap-3">
+                            <div class="w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center text-success">
+                                <i class="fa fa-shield-check fa-lg"></i>
+                            </div>
+                            <span class="fw-black text-uppercase tracking-tighter" style="font-size: 13px;">Resmi Garanti</span>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center gap-3">
+                            <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-500">
+                                <i class="fa fa-microchip fa-lg"></i>
+                            </div>
+                            <span class="fw-black text-uppercase tracking-tighter" style="font-size: 13px;">Dijital Ekipmanlar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light-blue" style="background: #f8fbff;">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="bg-white p-5 rounded-[40px] shadow-xl border border-white/50 text-center group hover:bg-primary transition-all duration-500">
+                    <div class="w-20 h-20 bg-primary/5 rounded-3xl mx-auto mb-5 d-flex align-items-center justify-center group-hover:bg-white/10 transition-colors">
+                        <i class="fa fa-eye fa-3x text-primary group-hover:text-white"></i>
+                    </div>
+                    <h3 class="fw-black italic tracking-tighter group-hover:text-white">Vizyonumuz</h3>
+                    <p class="text-muted group-hover:text-white/70">{{ s.vision_text or '“2005’ten beri Silivri’de güvenilir ve kırmadan çözümler sunarak, tesisat sektöründe kaliteli hizmetin öncüsü olmak.' }}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-5 rounded-[40px] shadow-xl border border-white/50 text-center group hover:bg-warning transition-all duration-500">
+                    <div class="w-20 h-20 bg-warning/5 rounded-3xl mx-auto mb-5 d-flex align-items-center justify-center group-hover:bg-white/10 transition-colors">
+                        <i class="fa fa-bullseye fa-3x text-warning group-hover:text-white"></i>
+                    </div>
+                    <h3 class="fw-black italic tracking-tighter group-hover:text-black">Misyonumuz</h3>
+                    <p class="text-muted group-hover:text-black/70">{{ s.mission_text or 'Müşterilerimizin mülklerine zarar vermeden, şeffaf ve hızlı servis anlayışıyla yaşam kalitelerini artırmak.' }}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bg-white p-5 rounded-[40px] shadow-xl border border-white/50 text-center group hover:bg-success transition-all duration-500">
+                    <div class="w-20 h-20 bg-success/5 rounded-3xl mx-auto mb-5 d-flex align-items-center justify-center group-hover:bg-white/10 transition-colors">
+                        <i class="fa fa-gem fa-3x text-success group-hover:text-white"></i>
+                    </div>
+                    <h3 class="fw-black italic tracking-tighter group-hover:text-white">Değerlerimiz</h3>
+                    <p class="text-muted group-hover:text-white/70">{{ s.values_text or 'Dürüstlük, teknik mükemmeliyet, müşteri memnuniyeti ve sürdürülebilir teknoloji kullanımı.' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="display-3 fw-black italic tracking-tighter">Başarı Yolculuğumuz</h2>
+            <div class="w-24 h-2 bg-warning mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="space-y-12">
+                {% for t in timeline %}
+                <div class="timeline-luxury animate__animated animate__fadeInUp">
+                    <div class="timeline-point"></div>
+                    <div class="ps-4">
+                        <span class="text-primary fw-black text-3xl italic">{{ t.year }}</span>
+                        <h4 class="fw-black text-slate-800 mt-1">{{ t.title }}</h4>
+                        <p class="text-slate-500 italic">{{ t.content }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+                {% if not timeline %}
+                <div class="text-center text-muted py-5">
+                    <i class="fa fa-history fa-4x opacity-10 mb-4"></i>
+                    <p class="fw-bold tracking-widest uppercase">Başarı hikayemiz yakında burada şeffaflıkla paylaşılacak.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-n5 py-5">
+    <div class="bg-primary p-10 rounded-[50px] text-center text-white shadow-2xl relative overflow-hidden animate__animated animate__zoomIn">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+        <div class="relative z-index-1">
+            <h2 class="display-4 fw-black italic tracking-tighter mb-4">Bizimle İletişime Geçin</h2>
+            <p class="lead mb-5 opacity-75">7/24 Teknik destek hattımız ve acil müdahale ekiplerimizle yanınızdayız.</p>
+            <a href="https://wa.me/{{ s.whatsapp }}" class="btn btn-warning btn-lg px-5 py-4 rounded-pill fw-black tracking-widest text-uppercase shadow-lg hover-scale">İLETİŞİME GEÇ</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

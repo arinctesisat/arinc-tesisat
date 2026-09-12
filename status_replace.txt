@@ -1,0 +1,4 @@
+DATABASE kurumsal_vFinal.db güncellendi.
+DATABASE kurumsal_v4.db güncellendi.
+DATABASE kurumsal.db güncellendi.
+DATABASE database.db güncellendi.
