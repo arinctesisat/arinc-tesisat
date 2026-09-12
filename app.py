@@ -263,6 +263,10 @@ def init_db():
             print(f"Lütfen bu şifreyi kaydedin. (Daha sonra panelden değiştirebilirsiniz)")
             print(f"=======================================================\n\n")
         db.execute("INSERT INTO admin VALUES ('admin', ?)", (generate_password_hash(default_pass),))
+    else:
+        env_pass = os.environ.get('ADMIN_PASSWORD')
+        if env_pass:
+            db.execute('UPDATE admin SET pass=? WHERE username=?', (generate_password_hash(env_pass), 'admin'))
     db.commit()
     db.close()
 
