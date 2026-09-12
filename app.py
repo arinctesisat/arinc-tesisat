@@ -92,7 +92,7 @@ app.config.update(
 def log_action(action):
     try:
         db = get_db()
-        db.execute('INSERT INTO logs (action, user, ip) VALUES (?, ?, ?)', 
+        db.execute('INSERT INTO logs (action, "user", ip) VALUES (?, ?, ?)', 
                    (action, session.get('user', 'admin') if session.get('admin') else 'guest', request.remote_addr))
         db.commit()
     except: pass
@@ -181,7 +181,7 @@ def init_db():
         color_primary TEXT DEFAULT '#001d3d', color_secondary TEXT DEFAULT '#ffc300', 
         hero_title TEXT, hero_subtitle TEXT, hero_img TEXT, 
         about_img TEXT, about_hero_img TEXT, footer_text TEXT,
-        meta_"desc" TEXT, meta_keys TEXT,
+        meta_desc TEXT, meta_keys TEXT,
         stat1_title TEXT DEFAULT 'Yıllık Tecrübe', stat1_value TEXT DEFAULT '21+',
         stat2_title TEXT DEFAULT 'Profesyonel Ekip', stat2_value TEXT DEFAULT '12+',
         stat3_title TEXT DEFAULT 'Mutlu Müşteri', stat3_value TEXT DEFAULT '5000+',
@@ -199,21 +199,21 @@ def init_db():
         gallery_title TEXT, contact_title TEXT, contact_subtitle TEXT,
         instagram TEXT, facebook TEXT, linkedin TEXT,
         city TEXT, district TEXT, map_embed TEXT, site_url TEXT, business_type TEXT DEFAULT 'Plumber',
-        seo_home_title TEXT, seo_home_"desc" TEXT, seo_home_keys TEXT,
-        seo_about_title TEXT, seo_about_"desc" TEXT, seo_about_keys TEXT,
-        seo_services_title TEXT, seo_services_"desc" TEXT, seo_services_keys TEXT,
-        seo_gallery_title TEXT, seo_gallery_"desc" TEXT, seo_gallery_keys TEXT,
-        seo_contact_title TEXT, seo_contact_"desc" TEXT, seo_contact_keys TEXT
+        seo_home_title TEXT, seo_home_desc TEXT, seo_home_keys TEXT,
+        seo_about_title TEXT, seo_about_desc TEXT, seo_about_keys TEXT,
+        seo_services_title TEXT, seo_services_desc TEXT, seo_services_keys TEXT,
+        seo_gallery_title TEXT, seo_gallery_desc TEXT, seo_gallery_keys TEXT,
+        seo_contact_title TEXT, seo_contact_desc TEXT, seo_contact_keys TEXT
     )''')
     db.execute(f'CREATE TABLE IF NOT EXISTS faq (id {pk_type}, question TEXT, answer TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS services (id {pk_type}, name TEXT, "desc" TEXT, icon TEXT, img TEXT, video TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS gallery (id {pk_type}, img TEXT, title TEXT, "desc" TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS videos (id {pk_type}, vid_path TEXT, title TEXT, "desc" TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS messages (id {pk_type}, name TEXT, phone TEXT, service TEXT, msg TEXT, is_read INTEGER DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, user TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, "user" TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     db.execute(f'CREATE TABLE IF NOT EXISTS testimonials (id {pk_type}, name TEXT, content TEXT, stars INTEGER)')
     db.execute(f'CREATE TABLE IF NOT EXISTS timeline (id {pk_type}, year TEXT, title TEXT, content TEXT)')
-    db.execute('CREATE TABLE IF NOT EXISTS admin (user TEXT PRIMARY KEY, pass TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS admin ("user" TEXT PRIMARY KEY, pass TEXT)')
 
     
     if not db.execute('SELECT * FROM settings WHERE id=1').fetchone():
@@ -229,7 +229,7 @@ def init_db():
         ]
         db.executemany('INSERT INTO faq (question, answer) VALUES (?, ?)', faqs)
     
-    if not db.execute('SELECT * FROM admin WHERE user=?', ('admin',)).fetchone():
+    if not db.execute('SELECT * FROM admin WHERE "user"=?', ('admin',)).fetchone():
         default_pass = os.environ.get('ADMIN_PASSWORD')
         if not default_pass:
             default_pass = secrets.token_urlsafe(12)
@@ -334,7 +334,7 @@ def robots():
 @limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
-        user = get_db().execute('SELECT * FROM admin WHERE user=?', (request.form['u'],)).fetchone()
+        user = get_db().execute('SELECT * FROM admin WHERE "user"=?', (request.form['u'],)).fetchone()
         if user and check_password_hash(user['pass'], request.form['p']):
             session.permanent = True
             session['admin'] = True
@@ -620,7 +620,7 @@ def update_settings():
     new_pass = request.form.get('new_pass')
     if new_pass:
         if validate_password(new_pass):
-            db.execute('UPDATE admin SET pass=? WHERE user=?', (generate_password_hash(new_pass), 'admin'))
+            db.execute('UPDATE admin SET pass=? WHERE "user"=?', (generate_password_hash(new_pass), 'admin'))
             log_action("Admin şifresi güncellendi")
         else:
             flash('Yeni şifre yeterince güçlü değil! (En az 8 karakter, büyük/küçük harf ve rakam içermeli)', 'danger')
@@ -639,7 +639,7 @@ def update_password():
     if pw:
         if validate_password(pw):
             db = get_db()
-            db.execute('UPDATE admin SET pass=? WHERE user=?', (generate_password_hash(pw), 'admin'))
+            db.execute('UPDATE admin SET pass=? WHERE "user"=?', (generate_password_hash(pw), 'admin'))
             db.commit()
             log_action("Admin şifresi güncellendi (Bağımsız rota)")
             flash('Şifre başarıyla güncellendi.', 'success')

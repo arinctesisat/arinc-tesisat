@@ -100,12 +100,12 @@ init_db_func = '''def init_db():
     db.execute(f'CREATE TABLE IF NOT EXISTS gallery (id {pk_type}, img TEXT, title TEXT, desc TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS videos (id {pk_type}, vid_path TEXT, title TEXT, desc TEXT)')
     db.execute(f'CREATE TABLE IF NOT EXISTS messages (id {pk_type}, name TEXT, phone TEXT, service TEXT, msg TEXT, is_read INTEGER DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
-    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, user TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+    db.execute(f'CREATE TABLE IF NOT EXISTS logs (id {pk_type}, action TEXT, "user" TEXT, ip TEXT, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
     db.execute(f'CREATE TABLE IF NOT EXISTS testimonials (id {pk_type}, name TEXT, content TEXT, stars INTEGER)')
     db.execute(f'CREATE TABLE IF NOT EXISTS timeline (id {pk_type}, year TEXT, title TEXT, content TEXT)')
-    db.execute('CREATE TABLE IF NOT EXISTS admin (user TEXT PRIMARY KEY, pass TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS admin ("user" TEXT PRIMARY KEY, pass TEXT)')
 '''
-code = re.sub(r'def init_db\(\):.*?db\.execute\(\'CREATE TABLE IF NOT EXISTS admin \(user TEXT PRIMARY KEY, pass TEXT\)\'\)', init_db_func, code, flags=re.DOTALL)
+code = re.sub(r'def init_db\(\):.*?db\.execute\(\'CREATE TABLE IF NOT EXISTS admin \("user" TEXT PRIMARY KEY, pass TEXT\)\'\)', init_db_func, code, flags=re.DOTALL)
 
 # 5. Fix file uploads (save function wrapper)
 upload_fix = '''def save_file(f, filename):
