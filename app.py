@@ -241,6 +241,10 @@ def init_db():
         except Exception as e:
             print(f"Seed error: {e}")
             db.execute("INSERT INTO settings (id, title, phone, whatsapp, about, address, email) VALUES (1, 'Silivri Su Kaçağı Tespit', '0536 491 5891', '905364915891', 'Profesyonel hizmet...', 'Silivri', 'iletisim@site.com')")
+            
+    # Hatalı/Eksik resmi otomatik düzelt
+    db.execute("UPDATE settings SET hero_img='su_kacag.png' WHERE hero_img='ChatGPT_Image_18_Tem_2026_17_21_49-removebg-preview_1.png'")
+    db.execute("UPDATE settings SET gallery_hero_img='su_kacag.png' WHERE gallery_hero_img='ChatGPT_Image_18_Tem_2026_17_21_49-removebg-preview_1.png'")
     
     # Varsayılan FAQ'lar (Eğer boşsa)
     if not db.execute('SELECT * FROM faq').fetchone():
