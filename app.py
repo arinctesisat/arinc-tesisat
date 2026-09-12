@@ -362,6 +362,15 @@ def robots():
 def login():
     if request.method == 'POST':
         admin_user = get_db().execute('SELECT * FROM admin WHERE username=?', (request.form['u'],)).fetchone()
+        
+        env_pass = os.environ.get('ADMIN_PASSWORD')
+        if request.form['u'] == 'admin' and env_pass and request.form['p'] == env_pass:
+            session.permanent = True
+            session['admin'] = True
+            session['user'] = 'admin'
+            log_action("Başarılı giriş yapıldı (ENV)")
+            return redirect('/panel')
+            
         if admin_user and check_password_hash(admin_user['pass'], request.form['p']):
             session.permanent = True
             session['admin'] = True
