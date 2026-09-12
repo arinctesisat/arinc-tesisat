@@ -222,19 +222,19 @@ def init_db():
             from seed_data import SETTINGS, SERVICES, VIDEOS
             
             # Insert settings
-            cols = ', '.join(SETTINGS.keys())
+            cols = ', '.join([f'"{k}"' for k in SETTINGS.keys()])
             placeholders = ', '.join(['?'] * len(SETTINGS))
             db.execute(f"INSERT INTO settings ({cols}) VALUES ({placeholders})", tuple(SETTINGS.values()))
             
             # Insert services
             for s in SERVICES:
-                cols = ', '.join([f'"{k}"' if k=='desc' else k for k in s.keys()])
+                cols = ', '.join([f'"{k}"' for k in s.keys()])
                 placeholders = ', '.join(['?'] * len(s))
                 db.execute(f"INSERT INTO services ({cols}) VALUES ({placeholders})", tuple(s.values()))
                 
             # Insert videos
             for v in VIDEOS:
-                cols = ', '.join([f'"{k}"' if k=='desc' else k for k in v.keys()])
+                cols = ', '.join([f'"{k}"' for k in v.keys()])
                 placeholders = ', '.join(['?'] * len(v))
                 db.execute(f"INSERT INTO videos ({cols}) VALUES ({placeholders})", tuple(v.values()))
                 

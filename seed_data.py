@@ -21,13 +21,13 @@ SETTINGS = {'about': '',
  'f_title': '',
  'facebook': '',
  'footer_text': '',
- 'gallery_hero_img': 'ChatGPT_Image_18_Tem_2026_17_21_49-removebg-preview_1.png',
+ 'gallery_hero_img': 'su_kacag.png',
  'gallery_hero_text': '',
  'gallery_title': '',
  'h_badge': 'SİLİVRİ VE ÇEVRE İLÇELERDE KIRMADAN NOKTASAL  SU KAÇAĞI TESPİTİ',
  'h_btn1': '',
  'h_btn2': '',
- 'hero_img': 'ChatGPT_Image_18_Tem_2026_17_21_49-removebg-preview_1.png',
+ 'hero_img': 'su_kacag.png',
  'hero_subtitle': 'Firmamız; kırmadan noktasal su kaçağı tespiti, robot ile '
                   'tıkanıklık açma, özel bar makinası ile gider yıkama, '
                   'tadilat alanlarında teknolojik makinalar ile profesyonel '
